@@ -1,0 +1,190 @@
+TEWC Protocol
+-------------
+
+Client
+------
+
+1. Login
+{
+	action : 'login' ,
+	user : 'username'
+}
+
+2. Logout
+{
+	action : 'logout'
+}
+
+3. Messages
+3.1 Public
+{
+	action : 'public_message' ,
+	room : 'room_name' ,
+	msg : 'message'
+}
+3.2 Private
+{
+	action : 'private_message' ,
+	to : 'username' ,
+	msg : 'message'
+}
+
+4. Rooms
+4.1 Enter
+{
+	action : 'enter_room' ,
+	room : 'room_name'
+}
+4.2 Exit
+{
+	action : 'exit_room' ,
+	room : 'room_name'
+}
+4.3 Create
+{
+	action : 'create_room' ,
+	room : 'room_name' ,
+	description : 'description'
+}
+
+Server
+------
+
+1. Login
+1.1 Unicast
+1.1.1 Success
+{
+	action : 'login' ,
+//	type : 'unicast' ,
+	status : true ,
+	roomlist : ['room_1' , 'room_2' , ...]
+}
+1.1.2 Failure
+{
+	action : 'login' ,
+//	type : 'unicast' ,
+	status : false ,
+	error : 'error_msg'
+}
+
+2. Logout
+2.1 Unicast
+2.1.1 Success
+{
+	action : 'logout' ,
+	type : 'unicast' ,
+	status : true
+}
+2.1.2 Failure
+{
+	action : 'logout' ,
+	type : 'unicast' ,
+	status : false ,
+	error : 'error_msg'
+}
+2.2 -> 4.2 for each user's rooms
+
+3. Messages
+3.1 Public
+{
+	action : 'public_message' ,
+	from : 'username' ,
+	room : 'room_name' ,
+	msg : 'message'
+}
+3.2 Private
+{
+	action : 'private_message' ,
+	to: 'username' ,
+	from : 'username' ,
+	msg : 'message'
+}
+
+4. Rooms
+4.1 Enter
+4.1.1 Unicast
+4.1.1.1 Success
+{
+	action : 'enter_room' ,
+	type : 'unicast' ,
+	status : true ,
+	room : 'room_name' ,
+	description : 'description' ,
+	userlist : ['user1' , 'user2', ...]
+}
+4.1.1.2 Failure
+{
+	action : 'enter_room' ,
+	type : 'unicast' ,
+	status : false ,
+	room : 'room_name' ,
+	error : 'error_msg'
+}
+4.1.2 Anycast (everyone except the user)
+{
+	action : 'enter_room' ,
+	type : 'anycast' ,
+	room : 'room_name' ,
+	user : 'username'
+}
+4.2 Exit
+// Nada nack all'utente?
+4.2.1 Anycast (everyone except the user)
+{
+	action : 'exit_room' ,
+	type : 'anycast' ,
+	room : 'room_name' ,
+	user : 'username'
+}
+4.3 Create
+4.3.1 Unicast
+4.3.1.1 Success
+{
+	action : 'create_room' ,
+	type : 'unicast' ,
+	status : true ,
+	room : 'room_name'
+}
+4.3.1.2 Failure
+{
+	action : 'create_room' ,
+	type : 'unicast' ,
+	status : false ,
+	room : 'room_name' ,
+	error : 'error_msg'
+}
+4.3.2 Anycast (everyone except the user)
+{
+	action : 'create_room' ,
+	type : 'anycast' ,
+	room : 'room_name' ,
+	description : 'description' ,
+	user : 'username'
+}
+4.4 Destroy
+Simply destroy the room
+
+Server Concepts
+---------------
+
+Connection Type
+---------------
+
+Unicast : send to the sender
+Calling example: sendUnicast (json);
+Anycast : send to everyone except the sender
+Calling example: sendAnycast (json, userlist);
+
+Handlers
+--------
+
+Users
+- login
+- logout
+Messages
+- public
+- private
+Rooms
+- create
+- enter
+- exit
