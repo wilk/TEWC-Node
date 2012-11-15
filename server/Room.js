@@ -53,13 +53,16 @@ module.exports = Room = function (name, description, users) {
 		return ul;
 	}
 	
-	this.getUserList = function (sid) {
+//	this.getUserList = function (sid) {
+	this.getUserList = function () {
 		var ul = new Array ();
 		
-		for (ssid in this.users) {
-			// Adds every user except the applicant
-			if (sid !== ssid) ul.push (this.users[ssid].socket);
-		}
+		for (ssid in this.users) ul.push (this.users[ssid].socket);
+		
+//		for (ssid in this.users) {
+//			// Adds every user except the applicant
+//			if (sid !== ssid) ul.push (this.users[ssid].socket);
+//		}
 		
 		return ul;
 	}

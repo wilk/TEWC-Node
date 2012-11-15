@@ -4,7 +4,7 @@ var app = require('express') () ,
     http = require ('http') ,
     server = http.createServer (app) ,
     io = require('socket.io').listen (server) ,
-    port = 3000;
+    port = 30000;
 
 var RoomFactory = require ('./RoomFactory');
 
@@ -50,7 +50,8 @@ io.sockets.on ('connection', function (socket) {
 	
 	// room.name and room.message
 	socket.on ('public message', function (room) {
-		var ul = RoomFactory.getUserList (room.name, socket.store.id);
+//		var ul = RoomFactory.getUserList (room.name, socket.store.id);
+		var ul = RoomFactory.getUserList (room.name);
 		
 		for (var i = 0; i < ul.length; i++) {
 			ul[i].emit ('public message', 
@@ -67,12 +68,23 @@ io.sockets.on ('connection', function (socket) {
 		var ul = io.sockets.clients ();
 		
 		for (var i in ul) {
-			if (ul[i].store.data.name === user.name) ul[i].emit ('private message',
-			{
-				'from': socket.store.data.name ,
-				'message': user.message
-			});
+			if (ul[i].store.data.name === user.name) {
+				ul[i].emit ('private message', {
+					'from': socket.store.data.name ,
+					'to': user.name ,
+					'message': user.message
+				});
+				
+				break;
+			}
 		}
+		
+		// ACK the user
+		socket.emit ('private message', {
+			'from': socket.store.data.name ,
+			'to': user.name ,
+			'message': user.message
+		});
 	});
 	
 	socket.on ('enter room', function (roomName) {
@@ -163,7 +175,8 @@ io.sockets.on ('connection', function (socket) {
 
 function exitRoom (roomName, socket) {
 	if (RoomFactory.removeUser (socket.store.id, roomName)) {
-		var ul = RoomFactory.getUserList (roomName, socket.store.id);
+//		var ul = RoomFactory.getUserList (roomName, socket.store.id);
+		var ul = RoomFactory.getUserList (roomName);
 		
 		// Notifies the rest of users of that room
 		for (var i in ul) {

@@ -64,9 +64,11 @@ module.exports = RoomFactory = (function () {
 		else return [];
 	}
 	
-	this.getUserList = function (roomName, sid) {
+//	this.getUserList = function (roomName, sid) {
+	this.getUserList = function (roomName) {
 		if (this.exists (roomName)) {
-			return this.rooms[roomName.toLowerCase ()].getUserList (sid);
+//			return this.rooms[roomName.toLowerCase ()].getUserList (sid);
+			return this.rooms[roomName.toLowerCase ()].getUserList ();
 		}
 		else return [];
 	}
