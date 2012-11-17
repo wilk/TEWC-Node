@@ -8,6 +8,10 @@ Ext.define ('TEWC.util.WebSocket', {
 		this.handle ();
 	} ,
 	
+	close: function () {
+		this.ws.disconnect ();
+	} ,
+	
 	handle: function () {
 		var opts = TEWC.util.Options;
 		var me = this;
