@@ -49,12 +49,12 @@ module.exports = RoomFactory = (function () {
 		if (this.rooms[roomName.toLowerCase ()].isPresent (sid)) {
 			if (this.rooms[roomName.toLowerCase ()].removeUser (sid)) {
 				// If there's no more users in this room, it removes
+				// TODO: do not delete the room, fix it
 				if (this.rooms[roomName.toLowerCase ()].length === 0) delete this.rooms[roomName.toLowerCase ()];
 			}
 		}
 		
-		// TODO: why false???
-		return false;
+		return true;
 	}
 	
 	this.getUsernameList = function (roomName) {

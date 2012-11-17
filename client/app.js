@@ -13,7 +13,10 @@ Ext.application ({
 		'Menu' ,
 		'Rooms' ,
 		'Users' ,
-		'Chat'
+		'Chat' ,
+		'NewRoom' ,
+		'Rooms' ,
+		'Room'
 	] ,
 	models: [
 		'Rooms' ,
@@ -25,7 +28,11 @@ Ext.application ({
 	] ,
 	controllers: [
 		'Menu' ,
-		'Chat'
+		'Chat' ,
+		'NewRoom' ,
+		'Rooms' ,
+		'Room' ,
+		'Users'
 	] ,
 	
 	launch: function () {

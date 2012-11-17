@@ -32,7 +32,10 @@ Ext.define ('TEWC.controller.Chat', {
 					});
 				}
 				else {
-					// TODO: handle PM
+					ws.send ('private message', {
+						to: room.title ,
+						message: msg
+					});
 				}
 			
 				tf.reset ();

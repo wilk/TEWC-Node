@@ -2,6 +2,8 @@ Ext.define ('TEWC.view.Users', {
 	extend: 'Ext.grid.Panel' ,
 	alias: 'widget.userlist' ,
 	
+	id: 'userlist' ,
+	
 	title: 'Users List' ,
 	collapsible: true ,
 	resizable: false ,

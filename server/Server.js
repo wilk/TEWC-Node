@@ -68,10 +68,11 @@ io.sockets.on ('connection', function (socket) {
 		var ul = io.sockets.clients ();
 		
 		for (var i in ul) {
-			if (ul[i].store.data.name === user.name) {
+			if (ul[i].store.data.name === user.to) {
 				ul[i].emit ('private message', {
+					'type': 'anycast' ,
 					'from': socket.store.data.name ,
-					'to': user.name ,
+					'to': user.to ,
 					'message': user.message
 				});
 				
@@ -81,8 +82,9 @@ io.sockets.on ('connection', function (socket) {
 		
 		// ACK the user
 		socket.emit ('private message', {
+			'type': 'unicast' ,
 			'from': socket.store.data.name ,
-			'to': user.name ,
+			'to': user.to ,
 			'message': user.message
 		});
 	});
@@ -108,12 +110,19 @@ io.sockets.on ('connection', function (socket) {
 			});
 			
 			// Notifies the rest of users, except this one
-			socket.broadcast.emit ('enter room', 
-			{
-				'type': 'anycast' ,
-				'room': room.name ,
-				'username': socket.store.data.name
-			});
+			var ul = RoomFactory.getUserList (roomName);
+		
+			// Notifies the rest of users of that room
+			for (var i in ul) {
+				if (ul[i] !== socket) {
+					ul[i].emit ('enter room', 
+					{
+						'type': 'anycast' ,
+						'room': roomName ,
+						'user': socket.store.data.name
+					});
+				}
+			}
 		}
 		else {
 			// NACK the user
@@ -155,9 +164,10 @@ io.sockets.on ('connection', function (socket) {
 			socket.broadcast.emit ('create room', 
 			{
 				'type': 'anycast' ,
+				'room': room.name
 				// room.name and room.description
-				'room': room ,
-				'username': socket.store.data.name
+//				'room': room ,
+//				'username': socket.store.data.name
 			});
 		}
 	});
@@ -178,14 +188,29 @@ function exitRoom (roomName, socket) {
 //		var ul = RoomFactory.getUserList (roomName, socket.store.id);
 		var ul = RoomFactory.getUserList (roomName);
 		
-		// Notifies the rest of users of that room
-		for (var i in ul) {
-			ul[i].emit ('exit room', 
+		if (ul.length === 0) {
+			socket.broadcast.emit ('destroy room', 
 			{
 				'type': 'anycast' ,
-				'room': roomName ,
-				'user': socket.store.data.name
+				'room': roomName
 			});
+			
+			socket.emit ('destroy room', 
+			{
+				'type': 'unicast' ,
+				'room': roomName
+			});
+		}
+		else {
+			// Notifies the rest of users of that room
+			for (var i in ul) {
+				ul[i].emit ('exit room', 
+				{
+					'type': 'anycast' ,
+					'room': roomName ,
+					'user': socket.store.data.name
+				});
+			}
 		}
 	}
 	else {

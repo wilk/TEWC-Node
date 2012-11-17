@@ -7,6 +7,9 @@ Ext.define ('TEWC.controller.Menu', {
 		this.control ({
 			'menunav textfield[itemId=tfLogin]': {
 				specialkey: this.login
+			} ,
+			'menunav button[itemId=btnNewRoom]': {
+				click: this.newRoom
 			}
 		});
 	} ,
@@ -20,5 +23,9 @@ Ext.define ('TEWC.controller.Menu', {
 			ws.connect ();
 			ws.send ('login', opts.username);
 		}
+	} ,
+	
+	newRoom: function (btn) {
+		Ext.create('TEWC.view.NewRoom').show ();
 	}
 });

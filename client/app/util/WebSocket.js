@@ -58,6 +58,8 @@ Ext.define ('TEWC.util.WebSocket', {
 		me.ws.on ('enter room', function (res) {
 			if (res.type === 'unicast') {
 				if (res.status) {
+					opts.rooms[res.room.name] = opts.rooms[res.room.name] || [];
+					
 					Ext.each (res.userlist, function (user) {
 						opts.rooms[res.room.name].push (user);
 					});
@@ -80,14 +82,15 @@ Ext.define ('TEWC.util.WebSocket', {
 					// 	var body = room.getEl().down ('div[class="room_body"]');
 					//	body.setHTML (body.getHTML () + msg + '<br/>');
 					//	or : body.insertHtml ('beforeEnd', '<p>' + msg + '</p>');
-					var room = rooms.add ({
+					var room = Ext.create ('TEWC.view.Room', {
 						title: res.room.name ,
 						itemId: 'room' + res.room.name ,
 						// To distinguish user (PM) and room
 						roomType: 'room' ,
-						html: roomDiv ,
-						closable: true
+						html: roomDiv
 					});
+					
+					rooms.add (room);
 					
 					rooms.setActiveTab (room);
 				}
@@ -105,7 +108,28 @@ Ext.define ('TEWC.util.WebSocket', {
 				}
 			}
 			else {
-				// TODO: handle anycast
+				opts.rooms[res.room].push (res.user);
+				
+				var rooms = Ext.getCmp('chat').down ('tabpanel[itemId=tpRooms]') ,
+				    room = rooms.child ('#room' + res.room) ,
+				    body = room.getEl().down ('div[class="room_body"]');
+				
+				// If the room where the user is chatting, updates the users store
+				if (rooms.getActiveTab().title == res.room) {
+					var users = Ext.data.StoreManager.lookup ('Users');
+					
+					users.add ({
+						user: res.user
+					});
+					
+					var index = users.find ('user', res.user) ,
+					    view = Ext.getCmp('userlist').getView ();
+				
+					// TODO: Improve the highlight
+					view.highlightItem (view.getNode (index));
+				}
+				
+				body.insertHtml ('beforeEnd', '<p class="room_enter_user">' + res.user + ' is just arrived!</p>');
 			}
 		});
 		
@@ -116,6 +140,123 @@ Ext.define ('TEWC.util.WebSocket', {
 			    user = '<b>' + res.from + '</b>';
 			
 			body.insertHtml ('beforeEnd', '<p>' + user + ': ' + res.message + '</p>');
+		});
+		
+		me.ws.on ('private message', function (res) {
+			var rooms = Ext.getCmp('chat').down ('tabpanel[itemId=tpRooms]');
+			var username;
+			
+			if (res.type === 'unicast') username = res.to;
+			else username = res.from;
+			
+			var room = rooms.child ('#user' + username);
+			
+			if (Ext.isEmpty (room)) {
+				var roomDiv = [
+					'<div class="room">' ,
+						'<div class="room_name">' ,
+							'Private chat' ,
+						'</div>' ,
+						'<div class="room_description">' ,
+							'between you and ' + username ,
+						'</div>' ,
+						'<div class="room_body"></div>' ,
+					'</div>'
+				].join ('');
+				
+				room = Ext.create ('TEWC.view.Room', {
+					title: username ,
+					itemId: 'user' + username ,
+					// To distinguish user (PM) and room
+					roomType: 'user' ,
+					html: roomDiv
+				});
+			
+				rooms.add (room);
+				
+				// Renders the room
+				var r = rooms.getActiveTab ();
+				rooms.setActiveTab (room);
+				rooms.setActiveTab (r);
+				
+				// TODO: highlight new tab
+			}
+			
+			var body = room.getEl().down ('div[class="room_body"]') ,
+			    user = '<b>' + res.from + '</b>';
+			
+			body.insertHtml ('beforeEnd', '<p>' + user + ': ' + res.message + '</p>');
+		});
+		
+		me.ws.on ('create room', function (res) {
+			var rooms = Ext.data.StoreManager.lookup ('Rooms');
+			var record;
+			
+			if (res.type === 'unicast') {
+				if (res.status) {
+					record = rooms.add ({
+						room: res.room
+					});
+					
+					me.send ('enter room', res.room);
+				}
+				else {
+					Ext.Msg.show ({
+						title: 'Error!' ,
+						msg: [
+							'An error occurred during the operation!<br/>' ,
+							'Server response is:<br/>' ,
+							res.error
+						].join ('') ,
+						icon: Ext.Msg.ERROR ,
+						buttons: Ext.Msg.OK
+					});
+				}
+			}
+			else {
+				record = rooms.add ({
+					room: res.room
+				});
+			}
+			
+			if (!Ext.isEmpty (record)) {
+				var index = rooms.find ('room', res.room) ,
+				    view = Ext.getCmp('roomlist').getView ();
+				
+				// TODO: Improve the highlight
+				view.highlightItem (view.getNode (index));
+			}
+		});
+		
+		me.ws.on ('exit room', function (res) {
+			if (res.type === 'anycast') {
+				Ext.each (opts.rooms[res.room], function (user, index) {
+					if (user === res.user) {
+						opts.rooms[res.room].splice (index, 1);
+						return false;
+					}
+				});
+				
+				var rooms = Ext.getCmp('chat').down ('tabpanel[itemId=tpRooms]') ,
+				    room = rooms.child ('#room' + res.room) ,
+				    body = room.getEl().down ('div[class="room_body"]');
+				
+				// If the room where the user is chatting, updates the users store
+				if (rooms.getActiveTab().title == res.room) {
+					var users = Ext.data.StoreManager.lookup ('Users');
+					
+					users.removeAt (users.find ('user', res.user));
+				}
+				
+				body.insertHtml ('beforeEnd', '<p class="room_exit_user">' + res.user + ' has left the room!</p>');
+			}
+		});
+		
+		me.ws.on ('destroy room', function (res) {
+			var rooms = Ext.data.StoreManager.lookup ('Rooms');
+			rooms.removeAt (rooms.find ('room', res.room));
+			
+			delete opts.rooms[res.room];
 		});
 	} ,
 	

@@ -2,6 +2,8 @@ Ext.define ('TEWC.view.Rooms', {
 	extend: 'Ext.grid.Panel' ,
 	alias: 'widget.roomlist' ,
 	
+	id: 'roomlist' ,
+	
 	title: 'Rooms List' ,
 	collapsible: true ,
 	resizable: false ,
