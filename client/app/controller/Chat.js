@@ -2,27 +2,24 @@ Ext.define ('TEWC.controller.Chat', {
 	extend: 'Ext.app.Controller' ,
 	
 	views: ['Chat'] ,
-	models: ['Users'] ,
-	stores: ['Users'] ,
+//	models: ['Users'] ,
+//	stores: ['Users'] ,
 	
 	init: function () {
 		this.control ({
 			'chat textfield[itemId=tfSend]': {
 				specialkey: this.send
-			} ,
-			'chat tabpanel[itemId=tpRooms]': {
-				tabchange: this.reconfigureUserlist
 			}
 		});
 	} ,
 	
 	send: function (tf, evt) {
 		if (evt.getKey () == evt.ENTER) {
-			var msg = tf.getValue ();
+			var msg = tf.getValue () ,
+			    rooms = tf.up('chat').down ('tabpanel[itemId=tpRooms]');
 		
-			if (!Ext.isEmpty (msg)) {
+			if (!Ext.isEmpty (msg) && (rooms.items.length > 0)) {
 				var ws = TEWC.util.WebSocket ,
-				    rooms = tf.up('chat').down ('tabpanel[itemId=tpRooms]') ,
 				    room = rooms.getActiveTab ();
 			
 				if (room.roomType == 'room') {
@@ -40,20 +37,6 @@ Ext.define ('TEWC.controller.Chat', {
 			
 				tf.reset ();
 			}
-		}
-	} ,
-	
-	reconfigureUserlist: function (tp, room) {
-		if (room.roomType == 'room') {
-			var users = this.getUsersStore ();
-			
-			users.removeAll ();
-			
-			Ext.each (TEWC.util.Options.rooms[room.title], function (user) {
-				users.add ({
-					user: user
-				});
-			});
 		}
 	}
 });

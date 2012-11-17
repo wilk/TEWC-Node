@@ -18,12 +18,14 @@ Ext.define ('TEWC.view.NewRoom', {
 			type: 'vbox' ,
 			align: 'stretch'
 		} ,
+		bodyPadding: 3 ,
 		
 		items: [{
 			xtype: 'textfield' ,
 			name: 'name' ,
 			emptyText: 'Room name' ,
-			allowBlank: false
+			allowBlank: false ,
+			enableKeyEvents: true
 		} , {
 			xtype: 'textarea' ,
 			name: 'description' ,

@@ -8,7 +8,7 @@ var app = require('express') () ,
 
 var RoomFactory = require ('./RoomFactory');
 
-RoomFactory.create ('Plaza', 'Central square discussion');
+//RoomFactory.create ('Plaza', 'Central square discussion');
 
 // Listens on port defined
 server.listen (port);
@@ -58,7 +58,8 @@ io.sockets.on ('connection', function (socket) {
 			{
 				'from': socket.store.data.name ,
 				'room': room.name ,
-				'message': room.message
+				'message': room.message ,
+				'timestamp': new Date ()
 			});
 		}
 	});
@@ -73,7 +74,8 @@ io.sockets.on ('connection', function (socket) {
 					'type': 'anycast' ,
 					'from': socket.store.data.name ,
 					'to': user.to ,
-					'message': user.message
+					'message': user.message ,
+					'timestamp': new Date ()
 				});
 				
 				break;
@@ -85,7 +87,8 @@ io.sockets.on ('connection', function (socket) {
 			'type': 'unicast' ,
 			'from': socket.store.data.name ,
 			'to': user.to ,
-			'message': user.message
+			'message': user.message ,
+			'timestamp': new Date ()
 		});
 	});
 	

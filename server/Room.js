@@ -23,6 +23,14 @@ module.exports = Room = function (name, description, users) {
 		}
 	}
 	
+	this.isEmpty = function () {
+		for (var user in this.users) {
+			if (this.users.hasOwnProperty (user)) return false;
+		}
+		
+		return true;
+	}
+	
 	this.removeUser = function (sid) {
 		if (this.isPresent (sid)) {
 			delete this.users[sid];
@@ -35,7 +43,7 @@ module.exports = Room = function (name, description, users) {
 	this.isPresent = function (sid) {
 		var res = false;
 		
-		for (index in this.users) {
+		for (var index in this.users) {
 			if (index === sid) {
 				res = true;
 				break;
@@ -48,7 +56,7 @@ module.exports = Room = function (name, description, users) {
 	this.getUsernameList = function () {
 		var ul = new Array ();
 		
-		for (ssid in this.users) ul.push (this.users[ssid].name);
+		for (var ssid in this.users) ul.push (this.users[ssid].name);
 		
 		return ul;
 	}
@@ -57,7 +65,7 @@ module.exports = Room = function (name, description, users) {
 	this.getUserList = function () {
 		var ul = new Array ();
 		
-		for (ssid in this.users) ul.push (this.users[ssid].socket);
+		for (var ssid in this.users) ul.push (this.users[ssid].socket);
 		
 //		for (ssid in this.users) {
 //			// Adds every user except the applicant

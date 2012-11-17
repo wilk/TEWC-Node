@@ -15,5 +15,9 @@ Ext.define ('TEWC.view.Users', {
 		header: 'User' ,
 		dataIndex: 'user' ,
 		flex: 1
-	}]
+	}] ,
+	
+	viewConfig: {
+		itemId: 'userstable'
+	}
 });

@@ -5,13 +5,27 @@ Ext.define ('TEWC.controller.NewRoom', {
 	
 	init: function () {
 		this.control ({
+			'newroom': {
+				afterlayout: this.focus
+			} ,
 			'newroom button[itemId=btnCreate]': {
 				click: this.createRoom
 			} ,
 			'newroom button[itemId=btnCancel]': {
 				click: this.cancel
+			} ,
+			'newroom textfield[name=name]': {
+				specialkey: this.parseText
 			}
 		});
+	} ,
+	
+	focus: function (win) {
+		win.down('textfield[name=name]').focus ();
+	} ,
+	
+	parseText: function (tf, evt) {
+		if (evt.getKey () === evt.ENTER) this.createRoom (tf);
 	} ,
 	
 	createRoom: function (btn) {

@@ -32,6 +32,8 @@ Ext.define ('TEWC.util.WebSocket', {
 				menu.down('label[itemId=lblUsername]').setText (opts.username);
 				menu.down('button[itemId=btnLogout]').setVisible (true);
 				menu.down('button[itemId=btnNewRoom]').setVisible (true);
+				menu.down('button[itemId=btnHelp]').setVisible (true);
+				menu.down('button[itemId=btnOptions]').setVisible (true);
 				
 				var tfSend = Ext.getCmp('chat').down ('textfield[itemId=tfSend]');
 				
@@ -39,7 +41,7 @@ Ext.define ('TEWC.util.WebSocket', {
 				tfSend.focus ();
 				
 				// Enters Plaza room
-				me.send ('enter room', 'Plaza');
+//				me.send ('enter room', 'Plaza');
 			}
 			else {
 				Ext.Msg.show ({
@@ -58,7 +60,8 @@ Ext.define ('TEWC.util.WebSocket', {
 		me.ws.on ('enter room', function (res) {
 			if (res.type === 'unicast') {
 				if (res.status) {
-					opts.rooms[res.room.name] = opts.rooms[res.room.name] || [];
+//					opts.rooms[res.room.name] = opts.rooms[res.room.name] || [];
+					opts.rooms[res.room.name] = [];
 					
 					Ext.each (res.userlist, function (user) {
 						opts.rooms[res.room.name].push (user);
@@ -112,6 +115,7 @@ Ext.define ('TEWC.util.WebSocket', {
 				
 				var rooms = Ext.getCmp('chat').down ('tabpanel[itemId=tpRooms]') ,
 				    room = rooms.child ('#room' + res.room) ,
+				    divRoom = room.getEl().down ('div[class="room"]') ,
 				    body = room.getEl().down ('div[class="room_body"]');
 				
 				// If the room where the user is chatting, updates the users store
@@ -121,25 +125,23 @@ Ext.define ('TEWC.util.WebSocket', {
 					users.add ({
 						user: res.user
 					});
-					
-					var index = users.find ('user', res.user) ,
-					    view = Ext.getCmp('userlist').getView ();
-				
-					// TODO: Improve the highlight
-					view.highlightItem (view.getNode (index));
 				}
 				
 				body.insertHtml ('beforeEnd', '<p class="room_enter_user">' + res.user + ' is just arrived!</p>');
+				divRoom.scroll ('b', divRoom.getHeight (true));
 			}
 		});
 		
 		me.ws.on ('public message', function (res) {
 			var rooms = Ext.getCmp('chat').down ('tabpanel[itemId=tpRooms]') ,
 			    room = rooms.child ('#room' + res.room) ,
+			    divRoom = room.getEl().down ('div[class="room"]') ,
 			    body = room.getEl().down ('div[class="room_body"]') ,
-			    user = '<b>' + res.from + '</b>';
+			    ts = '[<span class="timestamp">' + Ext.Date.format (new Date (res.timestamp), 'H:i:s') + '</span>] ' ,
+			    user = '<b>' + ts + res.from + '</b>';
 			
 			body.insertHtml ('beforeEnd', '<p>' + user + ': ' + res.message + '</p>');
+			divRoom.scroll ('b', divRoom.getHeight (true));
 		});
 		
 		me.ws.on ('private message', function (res) {
@@ -183,18 +185,20 @@ Ext.define ('TEWC.util.WebSocket', {
 			}
 			
 			var body = room.getEl().down ('div[class="room_body"]') ,
-			    user = '<b>' + res.from + '</b>';
+			    divRoom = room.getEl().down ('div[class="room"]') ,
+			    ts = '[<span class="timestamp">' + Ext.Date.format (new Date (res.timestamp), 'H:i:s') + '</span>] ' ,
+			    user = '<b>' + ts + res.from + '</b>';
 			
 			body.insertHtml ('beforeEnd', '<p>' + user + ': ' + res.message + '</p>');
+			divRoom.scroll ('b', divRoom.getHeight (true));
 		});
 		
 		me.ws.on ('create room', function (res) {
 			var rooms = Ext.data.StoreManager.lookup ('Rooms');
-			var record;
 			
 			if (res.type === 'unicast') {
 				if (res.status) {
-					record = rooms.add ({
+					rooms.add ({
 						room: res.room
 					});
 					
@@ -214,17 +218,9 @@ Ext.define ('TEWC.util.WebSocket', {
 				}
 			}
 			else {
-				record = rooms.add ({
+				rooms.add ({
 					room: res.room
 				});
-			}
-			
-			if (!Ext.isEmpty (record)) {
-				var index = rooms.find ('room', res.room) ,
-				    view = Ext.getCmp('roomlist').getView ();
-				
-				// TODO: Improve the highlight
-				view.highlightItem (view.getNode (index));
 			}
 		});
 		
@@ -239,9 +235,10 @@ Ext.define ('TEWC.util.WebSocket', {
 				
 				var rooms = Ext.getCmp('chat').down ('tabpanel[itemId=tpRooms]') ,
 				    room = rooms.child ('#room' + res.room) ,
+				    divRoom = room.getEl().down ('div[class="room"]') ,
 				    body = room.getEl().down ('div[class="room_body"]');
 				
-				// If the room where the user is chatting, updates the users store
+				// If it's the room where the user is chatting, updates the users store
 				if (rooms.getActiveTab().title == res.room) {
 					var users = Ext.data.StoreManager.lookup ('Users');
 					
@@ -249,6 +246,7 @@ Ext.define ('TEWC.util.WebSocket', {
 				}
 				
 				body.insertHtml ('beforeEnd', '<p class="room_exit_user">' + res.user + ' has left the room!</p>');
+				divRoom.scroll ('b', divRoom.getHeight (true));
 			}
 		});
 		

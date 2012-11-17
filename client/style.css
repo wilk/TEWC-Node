@@ -1,0 +1,43 @@
+.headerTitle {
+	font-size: 20px;
+	color: #e0e4e7;
+	font-family: 'Playball', cursive;
+	text-shadow: 2px 2px 2px #aaa;
+	padding: 10px;
+}
+
+.room {
+	overflow: auto;
+}
+
+.room_name {
+	font-size: 24px;
+	font-weight: bold;
+	padding: 10px 10px 10px 10px;
+	color: #43b19b;
+	text-shadow: 0.1em 0.1em 0.1em black;
+}
+
+.room_description {
+	font-size: 14px;
+	font-style: italic;
+	padding: 0 0 10px 10px;
+	color: #2e9f63;
+}
+
+.timestamp {
+	font-style: italic;
+	font-size: 10px;
+}
+
+.room_enter_user {
+	font-style: italic;
+	padding: 2px 0 0 0;
+	color: #28cd17;
+}
+
+.room_exit_user {
+	font-style: italic;
+	padding: 2px 0 0 0;
+	color: #ff0b0b;
+}

@@ -9,6 +9,9 @@ Ext.define ('TEWC.controller.Rooms', {
 		this.control ({
 			'roomlist': {
 				itemdblclick: this.enterRoom
+			} ,
+			'roomlist tableview[itemId=roomstable]': {
+				itemadd: this.highlight
 			}
 		});
 	} ,
@@ -23,5 +26,17 @@ Ext.define ('TEWC.controller.Rooms', {
 		else {
 			rooms.setActiveTab (room);
 		}
+	} ,
+	
+	highlight: function (records, index, item) {
+		// TODO: it doens't work
+		Ext.get(item).highlight ('0000ff', {
+			attr: 'backgroundColor' ,
+			endColor: 'fffff' ,
+			easing: 'easeIn' ,
+			duration: 1000
+		});
+//		Ext.get(grid.getView().getNode(index)).highlight ();
+//		Ext.get(row).highlight ();
 	}
 });

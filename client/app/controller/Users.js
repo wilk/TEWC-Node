@@ -7,6 +7,9 @@ Ext.define ('TEWC.controller.Users', {
 		this.control ({
 			'userlist': {
 				itemdblclick: this.pm
+			} ,
+			'userlist tableview[itemId=userstable]': {
+				itemadd: this.highlight
 			}
 		});
 	} ,
@@ -45,5 +48,17 @@ Ext.define ('TEWC.controller.Users', {
 				rooms.setActiveTab (room);
 			}
 		}
+	} ,
+	
+	highlight: function (records, index, item) {
+		// TODO: it doens't work
+		Ext.get(item).highlight ('0000ff', {
+			attr: 'backgroundColor' ,
+			endColor: 'fffff' ,
+			easing: 'easeIn' ,
+			duration: 1000
+		});
+//		Ext.get(grid.getView().getNode(index)).highlight ();
+//		Ext.get(row).highlight ();
 	}
 });

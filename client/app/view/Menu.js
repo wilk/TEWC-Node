@@ -18,21 +18,33 @@ Ext.define ('TEWC.view.Menu', {
 			xtype: 'button'
 		} ,
 		
-		items: ['->', '-' , {
-			xtype: 'textfield' ,
-			itemId: 'tfLogin' ,
-			emptyText: 'Username' ,
-			enableKeyEvents: true
-		} , {
+		items: [{
 			itemId: 'btnNewRoom' ,
 			text: 'New Room' ,
 			tooltip: 'Make a new room' ,
 			icon: 'images/balloon--plus.png' ,
 			hidden: true
 		} , '-' , {
+			itemId: 'btnOptions' ,
+			text: 'Options' ,
+			tooltip: 'Options setup' ,
+			icon: 'images/gear.png' ,
+			hidden: true
+		} , '-' , {
+			itemId: 'btnHelp' ,
+			text: 'Help' ,
+			tooltip: 'How-to and guidelines!' ,
+			icon: 'images/question.png' ,
+			hidden: true
+		} , '-' , '->', {
+			xtype: 'textfield' ,
+			itemId: 'tfLogin' ,
+			emptyText: 'Username' ,
+			enableKeyEvents: true
+		} , {
 			xtype: 'label' ,
 			itemId: 'lblUsername'
-		} , {
+		} , '-' , {
 			itemId: 'btnLogout' ,
 			text: 'Logout' ,
 			tooltip: 'Leave the chat' ,

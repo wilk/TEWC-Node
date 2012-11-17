@@ -15,5 +15,9 @@ Ext.define ('TEWC.view.Rooms', {
 		header: 'Room' ,
 		dataIndex: 'room' ,
 		flex: 1
-	}]
+	}] ,
+	
+	viewConfig: {
+		itemId: 'roomstable'
+	}
 });

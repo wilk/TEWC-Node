@@ -3,6 +3,8 @@ Ext.define ('TEWC.util.Options', {
 	
 	username: '' ,
 	
+	// users list of each rooms
+	// rooms['Plaza'] -> ['user1', 'user2', ...]
 	rooms: {} ,
 	
 	baseURI: 'http://localhost' ,
