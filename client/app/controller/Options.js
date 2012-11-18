@@ -25,33 +25,68 @@ Ext.define ('TEWC.controller.Options', {
 	} ,
 	
 	updatePreview: function () {
-		var 
+		var win = Ext.getCmp ('options') ,
+		    lblPreview = win.down ('container[itemId=lblPreview]') ,
+		    previewDate = lblPreview.getEl().down ('b[class="previewDate"]') ,
+		    body = ' Wilk: Hello!' ,
+		    opts = TEWC.util.Options;
+		
+		if (!Ext.isEmpty (opts.msgDateFormat)) body = '[' + Ext.Date.format (new Date (), opts.msgDateFormat) + ']' + body;
+		
+		previewDate.setHTML (body);
 	} ,
 	
 	changeTime: function (rb, val) {
+		this.snapshot ();
 		this.updatePreview ();
 	} ,
 	
 	changeDate: function (rb, val) {
+		this.snapshot ();
 		this.updatePreview ();
 	} ,
 	
-	checkTime: function (cb, val) {
+	checkTime: function (cb, checked) {
 		var rgTime = cb.next ('radiogroup[itemId=rgTime]');
 		
-		rgTime.setDisabled (!val);
+		rgTime.setDisabled (!checked);
 		
-		// TODO: update date format
+		this.snapshot ();
+		
 		this.updatePreview ();
 	} ,
 	
-	checkDate: function (cb, val) {
-		var rgDate = cb.next ('radiogroup[itemId=rgDate]');
+	checkDate: function (cbDate, checked) {
+		var rgDate = cbDate.next ('radiogroup[itemId=rgDate]');
 		
-		rgDate.setDisabled (!val);
+		rgDate.setDisabled (!checked);
 		
-		// TODO: update date format
+		this.snapshot ();
+		
 		this.updatePreview ();
+	} ,
+	
+	snapshot: function () {
+		var win = Ext.getCmp ('options') ,
+		    cbDate = win.down ('checkbox[itemId=cbDate]') ,
+		    rgDate = win.down ('radiogroup[itemId=rgDate]') ,
+		    cbTime = win.down ('checkbox[itemId=cbTime]') ,
+		    rgTime = win.down ('radiogroup[itemId=rgTime]') ,
+		    datePattern = '' ,
+		    timePattern = '' ,
+		    pattern = '' ,
+		    separator = ' - ';
+		
+		if (cbDate.getValue ()) datePattern = rgDate.getValue().rgDate;
+		
+		if (cbTime.getValue ()) timePattern = rgTime.getValue().rgTime;
+		
+		pattern = datePattern;
+		
+		if (cbDate.getValue () && cbTime.getValue ()) pattern += separator + timePattern;
+		else pattern += timePattern;
+		
+		TEWC.util.Options.msgDateFormat = pattern;
 	} ,
 	
 	initOpts: function (win) {

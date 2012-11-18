@@ -34,7 +34,7 @@ Ext.define ('TEWC.view.Options', {
 			defaultType: 'container' ,
 			
 			items: [{
-				html: '<i>Preview: </i><b class="previewDate">[15:31:49] Wilk: Hello!</b>' ,
+				html: '<i>Preview: </i><b class="previewDate">[' + Ext.Date.format (new Date (), TEWC.util.Options.msgDateFormat) + '] Wilk: Hello!</b>' ,
 				itemId: 'lblPreview' ,
 				padding: '0 0 3 0'
 			} , {
