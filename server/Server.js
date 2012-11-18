@@ -1,17 +1,8 @@
-// New declaration from express 2.x to 3.x
-// https://github.com/visionmedia/express/wiki/Migrating-from-2.x-to-3.x
-var app = require('express') () ,
-    http = require ('http') ,
-    server = http.createServer (app) ,
-    io = require('socket.io').listen (server) ,
-    port = 30000;
+var io = require('socket.io').listen (30000);
 
 var RoomFactory = require ('./RoomFactory');
 
 //RoomFactory.create ('Plaza', 'Central square discussion');
-
-// Listens on port defined
-server.listen (port);
 
 // Handles single socket connection
 io.sockets.on ('connection', function (socket) {
