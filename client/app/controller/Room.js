@@ -40,11 +40,10 @@ Ext.define ('TEWC.controller.Room', {
 		var divRoom = room.getEl().down ('div[class="room"]');
 		divRoom.scroll ('b', divRoom.getHeight (true));
 		
+		var users = this.getUsersStore ();
+		users.removeAll ();
+		
 		if (room.roomType == 'room') {
-			var users = this.getUsersStore ();
-			
-			users.removeAll ();
-			
 			Ext.each (TEWC.util.Options.rooms[room.title], function (user) {
 				users.add ({
 					user: user

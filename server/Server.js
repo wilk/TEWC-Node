@@ -192,6 +192,7 @@ function exitRoom (roomName, socket) {
 		var ul = RoomFactory.getUserList (roomName);
 		
 		if (ul.length === 0) {
+			// TODO: use a broadcast message, not two different messages
 			socket.broadcast.emit ('destroy room', 
 			{
 				'type': 'anycast' ,
