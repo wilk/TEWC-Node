@@ -4,8 +4,12 @@ Ext.define ('TEWC.util.WebSocket', {
 	
 	connect: function () {
 		var opts = TEWC.util.Options;
-		this.ws = io.connect (opts.baseURI + ':' + opts.port);
-		this.handle ();
+		
+		if (Ext.isEmpty (this.ws)) {
+			this.ws = io.connect (opts.baseURI + ':' + opts.port);
+			this.handle ();
+		}
+		else this.ws.socket.reconnect ();
 	} ,
 	
 	close: function () {
