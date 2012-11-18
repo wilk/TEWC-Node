@@ -4,6 +4,10 @@ Ext.Loader.setConfig ({
 
 Ext.require (['*']);
 
+Ext.EventManager.onWindowUnload (function () {
+	TEWC.util.WebSocket.disconnect ();
+});
+
 Ext.application ({
 	name: 'TEWC' ,
 	
@@ -16,7 +20,8 @@ Ext.application ({
 		'Chat' ,
 		'NewRoom' ,
 		'Rooms' ,
-		'Room'
+		'Room' ,
+		'Options'
 	] ,
 	models: [
 		'Rooms' ,
@@ -32,7 +37,8 @@ Ext.application ({
 		'NewRoom' ,
 		'Rooms' ,
 		'Room' ,
-		'Users'
+		'Users' ,
+		'Options'
 	] ,
 	
 	launch: function () {

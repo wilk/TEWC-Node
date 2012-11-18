@@ -32,12 +32,14 @@
 
 .room_enter_user {
 	font-style: italic;
-	padding: 2px 0 0 0;
+	font-weight: bold;
+	padding: 1px 0 1px 0;
 	color: #28cd17;
 }
 
 .room_exit_user {
 	font-style: italic;
-	padding: 2px 0 0 0;
+	font-weight: bold;
+	padding: 1px 0 1px 0;
 	color: #ff0b0b;
 }

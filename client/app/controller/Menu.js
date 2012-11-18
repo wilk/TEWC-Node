@@ -15,8 +15,15 @@ Ext.define ('TEWC.controller.Menu', {
 			} ,
 			'menunav button[itemId=btnNewRoom]': {
 				click: this.newRoom
+			} ,
+			'menunav button[itemId=btnOptions]': {
+				click: this.showOptions
 			}
 		});
+	} ,
+	
+	showOptions: function (btn) {
+		Ext.create('TEWC.view.Options').show ();
 	} ,
 	
 	login: function (tf, evt) {

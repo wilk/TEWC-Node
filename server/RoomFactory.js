@@ -7,7 +7,7 @@ module.exports = RoomFactory = (function () {
 	// Sends a message to each users registered
 	this.sendMessage = function (msg) {
 		if (typeof this.rooms !== 'undefined') {
-			for (index in this.rooms) this.rooms[index].displayMsg (msg);
+			for (var index in this.rooms) this.rooms[index].displayMsg (msg);
 		}
 	}
 	

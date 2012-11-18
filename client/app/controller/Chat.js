@@ -2,8 +2,6 @@ Ext.define ('TEWC.controller.Chat', {
 	extend: 'Ext.app.Controller' ,
 	
 	views: ['Chat'] ,
-//	models: ['Users'] ,
-//	stores: ['Users'] ,
 	
 	init: function () {
 		this.control ({
