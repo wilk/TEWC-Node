@@ -22,8 +22,8 @@ Download it first:
 ```bash
 $ cd /var/www
 $ git clone https://github.com/wilk/TEWC-Node
-$ cd TEWC-Node
-$ node server/Server.js
+$ cd TEWC-Node/server
+$ node Server.js
 ```
 
 Now open your browser at **http://localhost/TEWC-Node/client** and have fun!
