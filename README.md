@@ -14,6 +14,9 @@ $ sudo apt-get install npm
 $ npm install socket.io
 ```
 
+Another requirement is the [**ExtJS**](http://www.sencha.com/products/extjs/) framework: [**download it**](http://www.sencha.com/products/extjs/download), copy and past it into the client directory.
+Now you're ready to use TEWC-Node!
+
 ## Usage
 
 Now you're ready to use TEWC-Node!
