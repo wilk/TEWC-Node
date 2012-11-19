@@ -1,6 +1,10 @@
-var io = require('socket.io').listen (30000);
+var RoomFactory = require ('./RoomFactory') ,
+    fs = require ('fs') ,
+    cf = fs.readFileSync ('../config.json', 'utf-8') ,
+    config = JSON.parse (cf) ,
+    io = require('socket.io').listen (config.port);
 
-var RoomFactory = require ('./RoomFactory');
+//var RoomFactory = require ('./RoomFactory');
 
 //RoomFactory.create ('Plaza', 'Central square discussion');
 

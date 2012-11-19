@@ -42,6 +42,17 @@ Ext.application ({
 	] ,
 	
 	launch: function () {
-		Ext.create ('TEWC.view.Viewport');
+		Ext.Ajax.request ({
+			url: '../config.json' ,
+			success: function (res) {
+				var config = Ext.JSON.decode (res.responseText);
+				TEWC.util.Options.baseURI = config.baseURI;
+				TEWC.util.Options.port = config.port;
+				
+				Ext.Loader.loadScript (config.baseURI + ':' + config.port + '/socket.io/socket.io.js');
+				
+				Ext.create ('TEWC.view.Viewport');
+			}
+		});
 	}
 });
