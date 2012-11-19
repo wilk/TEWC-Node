@@ -75,7 +75,7 @@ Ext.define ('TEWC.controller.Options', {
 		    datePattern = '' ,
 		    timePattern = '' ,
 		    pattern = '' ,
-		    separator = ' - ';
+		    separator = '-';
 		
 		if (cbDate.getValue ()) datePattern = rgDate.getValue().rgDate;
 		
@@ -90,10 +90,49 @@ Ext.define ('TEWC.controller.Options', {
 	} ,
 	
 	initOpts: function (win) {
-	
+		var ckFormatPattern = Ext.util.Cookies.get ('msgDateFormatPattern') ,
+		    ckFormatType = Ext.util.Cookies.get ('msgDateFormatType');
+		
+		if (ckFormatPattern != null) {
+			var cbDate = win.down ('checkbox[itemId=cbDate]') ,
+			    rgDate = win.down ('radiogroup[itemId=rgDate]') ,
+			    cbTime = win.down ('checkbox[itemId=cbTime]') ,
+			    rgTime = win.down ('radiogroup[itemId=rgTime]');
+			
+			cbDate.setValue (false);
+			cbTime.setValue (false);
+			
+			if (!Ext.isEmpty (ckFormatPattern)) {
+				if (ckFormatType === 'datetime') {
+					var pattern = ckFormatPattern.split ('-');
+					
+					cbDate.setValue (true);
+					rgDate.setValue ({rgDate: pattern[0]});
+					cbTime.setValue (true);
+					rgTime.setValue ({rgTime: pattern[1]});
+				}
+				else if (ckFormatType === 'date') {
+					cbDate.setValue (true);
+					rgDate.setValue ({rgDate: ckFormatPattern});
+				}
+				else if (ckFormatType === 'time') {
+					cbTime.setValue (true);
+					rgTime.setValue ({rgTime: ckFormatPattern});
+				}
+			}
+		}
 	} ,
 	
 	saveOpts: function (win) {
+		var cbDate = win.down ('checkbox[itemId=cbDate]') ,
+		    cbTime = win.down ('checkbox[itemId=cbTime]') ,
+		    type = cbDate.getValue () && cbTime.getValue () ? 'datetime' :
+			   cbDate.getValue () ? 'date' :
+			   cbTime.getValue () ? 'time' : '';
 		
+		Ext.util.Cookies.set ('msgDateFormatType', type);
+		Ext.util.Cookies.set ('msgDateFormatPattern', TEWC.util.Options.msgDateFormat);
+		
+		Ext.getCmp('chat').down('textfield[itemId=tfSend]').focus ();
 	}
 });

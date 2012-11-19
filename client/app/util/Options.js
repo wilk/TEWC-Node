@@ -7,7 +7,7 @@ Ext.define ('TEWC.util.Options', {
 	// rooms['Plaza'] -> ['user1', 'user2', ...]
 	rooms: {} ,
 	
-	msgDateFormat: 'H:i:s' ,
+	msgDateFormat: Ext.util.Cookies.get ('msgDateFormatPattern') == null ? 'H:i:s' : Ext.util.Cookies.get ('msgDateFormatPattern') ,
 	
 	baseURI: 'http://localhost' ,
 	port: 30000

@@ -20,8 +20,7 @@ Ext.define ('TEWC.controller.Chat', {
 				var ws = TEWC.util.WebSocket ,
 				    room = rooms.getActiveTab ();
 				
-				msg = msg.replace (/</g , '&lt;');
-				msg = msg.replace (/>/g , '&gt;');
+				msg = Ext.String.htmlEncode (msg);
 				
 				if (room.roomType == 'room') {
 					ws.send ('public message', {

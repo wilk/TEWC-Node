@@ -32,7 +32,6 @@ Ext.define ('TEWC.controller.Menu', {
 			
 			opts.username = tf.getValue ();
 			
-			// TODO: problem with reconnect!
 			ws.connect ();
 			ws.send ('login', opts.username);
 		}
