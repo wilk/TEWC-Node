@@ -2,7 +2,11 @@ Ext.Loader.setConfig ({
 	enabled: true
 });
 
-Ext.require (['*']);
+Ext.require ([
+	'Ext.window.Window' ,
+	'Ext.tab.Panel' ,
+	'Ext.form.Panel'
+]);
 
 Ext.EventManager.onWindowUnload (function () {
 	TEWC.util.WebSocket.disconnect ();
