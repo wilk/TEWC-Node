@@ -15,16 +15,10 @@ Ext.define ('TEWC.controller.Users', {
 	} ,
 	
 	pm: function (grid, record) {
-		if (record.get ('user') !== TEWC.util.Options.username) {
+		var opts = TEWC.util.Options;
+		if (record.get ('user') !== opts.username) {
 			var rooms = Ext.getCmp('chat').down ('tabpanel[itemId=tpRooms]') ,
-			    room;
-			
-			Ext.each (rooms.items.items, function (tab) {
-				if (tab.itemId === 'user' + record.get ('user')) {
-					room = tab;
-					return false;
-				}
-			});
+			    room = Ext.isEmpty (opts.rooms['user' + record.get ('user')]) ? null : opts.rooms['user' + record.get ('user')].tab;
 			
 			if (Ext.isEmpty (room)) {
 				var roomDiv = [
@@ -47,7 +41,10 @@ Ext.define ('TEWC.controller.Users', {
 					html: roomDiv
 				});
 			
-				rooms.add (room);
+				rooms.add (room);				
+				opts.rooms['user' + record.get ('user')] = {
+					tab: room
+				};
 			}
 			
 			rooms.setActiveTab (room);

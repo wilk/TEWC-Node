@@ -23,6 +23,7 @@ Ext.define ('TEWC.controller.Room', {
 		if (room.roomType == 'room') {
 			TEWC.util.WebSocket.send ('exit room', room.title);
 		}
+		else delete TEWC.util.Options.rooms['user' + room.title];
 	} ,
 	
 	resize: function (room) {
@@ -44,7 +45,7 @@ Ext.define ('TEWC.controller.Room', {
 		users.removeAll ();
 		
 		if (room.roomType == 'room') {
-			Ext.each (TEWC.util.Options.rooms[room.title], function (user) {
+			Ext.each (TEWC.util.Options.rooms['room' + room.title].userlist, function (user) {
 				users.add ({
 					user: user
 				});

@@ -30,7 +30,10 @@ Ext.define ('TEWC.util.WebSocket', {
 						room: room
 					});
 					
-					opts.rooms[room] = [];
+					opts.rooms['room' + room] = {
+						userlist: [] ,
+						tab: null
+					};
 				});
 				
 				// Updates the menu
@@ -47,9 +50,6 @@ Ext.define ('TEWC.util.WebSocket', {
 				
 				tfSend.enable ();
 				tfSend.focus ();
-				
-				// Enters Plaza room
-//				me.send ('enter room', 'Plaza');
 			}
 			else {
 				Ext.Msg.show ({
@@ -68,11 +68,8 @@ Ext.define ('TEWC.util.WebSocket', {
 		me.ws.on ('enter room', function (res) {
 			if (res.type === 'unicast') {
 				if (res.status) {
-//					opts.rooms[res.room.name] = opts.rooms[res.room.name] || [];
-					opts.rooms[res.room.name] = [];
-					
 					Ext.each (res.userlist, function (user) {
-						opts.rooms[res.room.name].push (user);
+						opts.rooms['room' + res.room.name].userlist.push (user);
 					});
 					
 					var rooms = Ext.getCmp('chat').down ('tabpanel[itemId=tpRooms]');
@@ -89,10 +86,6 @@ Ext.define ('TEWC.util.WebSocket', {
 						'</div>'
 					].join ('');
 					
-					// TODO: to add messages: 
-					// 	var body = room.getEl().down ('div[class="room_body"]');
-					//	body.setHTML (body.getHTML () + msg + '<br/>');
-					//	or : body.insertHtml ('beforeEnd', '<p>' + msg + '</p>');
 					var room = Ext.create ('TEWC.view.Room', {
 						title: res.room.name ,
 						itemId: 'room' + res.room.name ,
@@ -102,6 +95,7 @@ Ext.define ('TEWC.util.WebSocket', {
 					});
 					
 					rooms.add (room);
+					opts.rooms['room' + res.room.name].tab = room;
 					
 					rooms.setActiveTab (room);
 				}
@@ -119,19 +113,11 @@ Ext.define ('TEWC.util.WebSocket', {
 				}
 			}
 			else {
-				opts.rooms[res.room].push (res.user);
+				opts.rooms['room' + res.room].userlist.push (res.user);
 				
 				var rooms = Ext.getCmp('chat').down ('tabpanel[itemId=tpRooms]') ,
-				    room;
-				
-				Ext.each (rooms.items.items, function (tab) {
-					if (tab.itemId === 'room' + res.room) {
-						room = tab;
-						return false;
-					}
-				});
-				
-				var divRoom = room.getEl().down ('div[class="room"]') ,
+				    room = Ext.isEmpty (opts.rooms['room' + res.room]) ? null : opts.rooms['room' + res.room].tab ,
+				    divRoom = room.getEl().down ('div[class="room"]') ,
 				    body = room.getEl().down ('div[class="room_body"]');
 				
 				// If the room where the user is chatting, updates the users store
@@ -150,16 +136,8 @@ Ext.define ('TEWC.util.WebSocket', {
 		
 		me.ws.on ('public message', function (res) {
 			var rooms = Ext.getCmp('chat').down ('tabpanel[itemId=tpRooms]') ,
-			    room;
-			
-			Ext.each (rooms.items.items, function (tab) {
-				if (tab.itemId === 'room' + res.room) {
-					room = tab;
-					return false;
-				}
-			});
-			
-			var divRoom = room.getEl().down ('div[class="room"]') ,
+			    room = Ext.isEmpty (opts.rooms['room' + res.room]) ? null : opts.rooms['room' + res.room].tab ,
+			    divRoom = room.getEl().down ('div[class="room"]') ,
 			    body = room.getEl().down ('div[class="room_body"]') ,
 			    ts = Ext.isEmpty (opts.msgDateFormat) ? '' : '[<span class="timestamp">' + Ext.Date.format (new Date (res.timestamp), opts.msgDateFormat) + '</span>] ' ,
 			    user = '<b>' + ts + res.from + '</b>';
@@ -170,17 +148,8 @@ Ext.define ('TEWC.util.WebSocket', {
 		
 		me.ws.on ('private message', function (res) {
 			var rooms = Ext.getCmp('chat').down ('tabpanel[itemId=tpRooms]') ,
-			    username, room;
-			
-			if (res.type === 'unicast') username = res.to;
-			else username = res.from;
-			
-			Ext.each (rooms.items.items, function (tab) {
-				if (tab.itemId === 'user' + username) {
-					room = tab;
-					return false;
-				}
-			});
+			    username = res.type === 'unicast' ? res.to : res.from ,
+			    room = Ext.isEmpty (opts.rooms['user' + username]) ? null : opts.rooms['user' + username].tab;
 			
 			if (Ext.isEmpty (room)) {
 				var roomDiv = [
@@ -204,6 +173,9 @@ Ext.define ('TEWC.util.WebSocket', {
 				});
 			
 				rooms.add (room);
+				opts.rooms['user' + username] = {
+					tab: room
+				};
 				
 				// Renders the room
 				var r = rooms.getActiveTab ();
@@ -233,6 +205,11 @@ Ext.define ('TEWC.util.WebSocket', {
 						room: res.room
 					});
 					
+					opts.rooms['room' + res.room] = {
+						userlist: [] ,
+						tab: null
+					};
+					
 					me.send ('enter room', res.room);
 				}
 				else {
@@ -252,14 +229,19 @@ Ext.define ('TEWC.util.WebSocket', {
 				rooms.add ({
 					room: res.room
 				});
+				
+				opts.rooms['room' + res.room] = {
+					userlist: [] ,
+					tab: null
+				};
 			}
 		});
 		
 		me.ws.on ('exit room', function (res) {
 			if (res.type === 'anycast') {
-				Ext.each (opts.rooms[res.room], function (user, index) {
+				Ext.each (opts.rooms['room' + res.room].userlist, function (user, index) {
 					if (user === res.user) {
-						opts.rooms[res.room].splice (index, 1);
+						opts.rooms['room' + res.room].userlist.splice (index, 1);
 						return false;
 					}
 				});
@@ -293,7 +275,7 @@ Ext.define ('TEWC.util.WebSocket', {
 			var rooms = Ext.data.StoreManager.lookup ('Rooms');
 			rooms.removeAt (rooms.find ('room', res.room));
 			
-			delete opts.rooms[res.room];
+			delete opts.rooms['room' + res.room];
 		});
 	} ,
 	

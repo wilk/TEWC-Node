@@ -18,14 +18,7 @@ Ext.define ('TEWC.controller.Rooms', {
 	
 	enterRoom: function (grid, record, item, index) {
 		var rooms = Ext.getCmp('chat').down ('tabpanel[itemId=tpRooms]') ,
-		    room;
-		
-		Ext.each (rooms.items.items, function (tab) {
-			if (tab.itemId === 'room' + res.room) {
-				room = tab;
-				return false;
-			}
-		});
+		    room = Ext.isEmpty (TEWC.util.Options.rooms['room' + record.get ('room')]) ? null : TEWC.util.Options.rooms['room' + record.get ('room')].tab;
 		
 		if (Ext.isEmpty (room)) {
 			TEWC.util.WebSocket.send ('enter room', record.get ('room'));
