@@ -17,8 +17,15 @@ Ext.define ('TEWC.controller.Users', {
 	pm: function (grid, record) {
 		if (record.get ('user') !== TEWC.util.Options.username) {
 			var rooms = Ext.getCmp('chat').down ('tabpanel[itemId=tpRooms]') ,
-			    room = rooms.child ('#user' + record.get ('user'));
-		
+			    room;
+			
+			Ext.each (rooms.items.items, function (tab) {
+				if (tab.itemId === 'user' + record.get ('user')) {
+					room = tab;
+					return false;
+				}
+			});
+			
 			if (Ext.isEmpty (room)) {
 				var roomDiv = [
 					'<div class="room">' ,
@@ -41,12 +48,9 @@ Ext.define ('TEWC.controller.Users', {
 				});
 			
 				rooms.add (room);
+			}
 			
-				rooms.setActiveTab (room);
-			}
-			else {
-				rooms.setActiveTab (room);
-			}
+			rooms.setActiveTab (room);
 		}
 	} ,
 	
