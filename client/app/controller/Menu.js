@@ -28,12 +28,15 @@ Ext.define ('TEWC.controller.Menu', {
 	
 	login: function (tf, evt) {
 		if (evt.getKey () == evt.ENTER) {
-			var opts = TEWC.util.Options, ws = TEWC.util.WebSocket;
-			
-			opts.username = tf.getValue ();
-			
-			ws.connect ();
-			ws.send ('login', opts.username);
+			if (tf.isValid ()) {
+				var opts = TEWC.util.Options, ws = TEWC.util.WebSocket;
+				
+				opts.username = tf.getValue ();
+				
+				ws.connect ();
+				ws.send ('login', opts.username);
+			}
+			else tf.markInvalid ('This field can\'t be empty!');
 		}
 	} ,
 	

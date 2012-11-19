@@ -40,7 +40,8 @@ Ext.define ('TEWC.view.Menu', {
 			xtype: 'textfield' ,
 			itemId: 'tfLogin' ,
 			emptyText: 'Username' ,
-			enableKeyEvents: true
+			enableKeyEvents: true ,
+			allowBlank: false
 		} , {
 			xtype: 'label' ,
 			itemId: 'lblUsername'

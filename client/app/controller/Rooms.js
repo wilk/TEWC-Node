@@ -29,13 +29,14 @@ Ext.define ('TEWC.controller.Rooms', {
 	} ,
 	
 	highlight: function (records, index, item) {
+		Ext.getCmp('roomlist').getSelectionModel().select (index);
 		// TODO: it doens't work
-		Ext.get(item).highlight ('0000ff', {
-			attr: 'backgroundColor' ,
-			endColor: 'fffff' ,
-			easing: 'easeIn' ,
-			duration: 1000
-		});
+//		Ext.get(item).highlight ('0000ff', {
+//			attr: 'backgroundColor' ,
+//			endColor: 'fffff' ,
+//			easing: 'easeIn' ,
+//			duration: 1000
+//		});
 //		Ext.get(grid.getView().getNode(index)).highlight ();
 //		Ext.get(row).highlight ();
 	}
