@@ -35,7 +35,7 @@ io.sockets.on ('connection', function (socket) {
 			socket.emit ('login',
 			{
 				'status': true ,
-				'roomNameList': RoomFactory.getRoomNameList ()
+				'rooms': RoomFactory.getRoomsList ()
 			});
 		}
 	});
@@ -86,39 +86,58 @@ io.sockets.on ('connection', function (socket) {
 		});
 	});
 	
-	socket.on ('enter room', function (roomName) {
-		if (RoomFactory.addUser (socket, socket.store.id, socket.store.data.name, roomName)) {
-			// Record the room to the user
-			socket.store.data.rooms.push (roomName);
-			
-			var room = {
-				'name': roomName ,
-				'description': RoomFactory.getRoomDescription (roomName)
-			};
-			
-			// ACK the user
-			socket.emit ('enter room', 
-			{
-				'type': 'unicast' ,
-				'status': true ,
-				// room.name and room.description
-				'room': room ,
-				'userlist': RoomFactory.getUsernameList (roomName)
-			});
-			
-			// Notifies the rest of users, except this one
-			var ul = RoomFactory.getUserList (roomName);
+	socket.on ('enter room', function (room) {
+		var allowed = false;
 		
-			// Notifies the rest of users of that room
-			for (var i in ul) {
-				if (ul[i] !== socket) {
-					ul[i].emit ('enter room', 
-					{
-						'type': 'anycast' ,
-						'room': roomName ,
-						'user': socket.store.data.name
-					});
+		if (RoomFactory.protected (room.name)) {
+			if (RoomFactory.validate (room.name, room.password)) allowed = true;
+		}
+		else allowed = true;
+		
+		if (allowed) {
+			if (RoomFactory.addUser (socket, socket.store.id, socket.store.data.name, room.name)) {
+				// Record the room to the user
+				socket.store.data.rooms.push (room.name);
+			
+				var room2send = {
+					'name': room.name ,
+					'description': RoomFactory.getRoomDescription (room.name)
+				};
+				
+				// ACK the user
+				socket.emit ('enter room', 
+				{
+					'type': 'unicast' ,
+					'status': true ,
+					// room.name and room.description
+					'room': room2send ,
+					'userlist': RoomFactory.getUsernameList (room.name)
+				});
+			
+				// Notifies the rest of users, except this one
+				var ul = RoomFactory.getUserList (room.name);
+		
+				// Notifies the rest of users of that room
+				for (var i in ul) {
+					if (ul[i] !== socket) {
+						ul[i].emit ('enter room', 
+						{
+							'type': 'anycast' ,
+							'room': room.name ,
+							'user': socket.store.data.name
+						});
+					}
 				}
+			}
+			else {
+				// NACK the user
+				socket.emit ('enter room',
+				{
+					'type': 'unicast' ,
+					'status': false ,
+					'room': room.name ,
+					'error': 'User already present in this room!'
+				});
 			}
 		}
 		else {
@@ -127,8 +146,8 @@ io.sockets.on ('connection', function (socket) {
 			{
 				'type': 'unicast' ,
 				'status': false ,
-				'room': roomName ,
-				'error': 'User already present in this room!'
+				'room': room.name ,
+				'error': 'Wrong password!'
 			});
 		}
 	});
@@ -136,7 +155,7 @@ io.sockets.on ('connection', function (socket) {
 	// room.name and room.description
 	socket.on ('create room', function (room) {
 		// Check if the room exists
-		if (RoomFactory.exists (room.name)) 
+		if (RoomFactory.exists (room.name)) {
 			// Sends back a message error if exists
 			socket.emit ('create room', 
 			{
@@ -145,23 +164,27 @@ io.sockets.on ('connection', function (socket) {
 				'room': room.name ,
 				'error': 'Room already exists!'
 			});
+		}
 		// Otherwise creates a new room
 		else {
-			RoomFactory.create (room.name, room.description);
+//			RoomFactory.create (room.name, room.description);
+			RoomFactory.create (room);
 			
 			// ACK to the user
 			socket.emit ('create room', 
 			{
 				'type': 'unicast' ,
 				'status': true ,
-				'room': room.name
+				'room': room.name ,
+				'protected': room.protected
 			});
 			
 			// Notifies the rest of users, except the creator of the room
 			socket.broadcast.emit ('create room', 
 			{
 				'type': 'anycast' ,
-				'room': room.name
+				'room': room.name ,
+				'protected': room.protected
 			});
 		}
 	});

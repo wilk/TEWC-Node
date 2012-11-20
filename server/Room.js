@@ -1,13 +1,15 @@
-module.exports = Room = function (name, description, users) {
-	this.name = name;
-	this.description = description || '';
-	// users = {
-	//	socket : socket ,
-	//	sid : sid ,
-	//	name : name
-	//}
-	// This structure is needed to avoid direct access to the socket class in this class
-	this.users = users || new Object ();
+// room = {
+//   name: 'name' ,
+//   description: 'description' ,
+//   protected: true ,
+//   password: 'password'
+// }
+module.exports = Room = function (room) {
+	this.name = room.name;
+	this.description = room.description || '';
+	this.protected = room.protected || false;
+	this.password = room.password || '';
+	this.users = {};
 	
 	// TODO: pass the entire socket structure? Why not only sid, username and rooms?
 	this.addUser = function (socket, sid, name) {
@@ -61,16 +63,10 @@ module.exports = Room = function (name, description, users) {
 		return ul;
 	}
 	
-//	this.getUserList = function (sid) {
 	this.getUserList = function () {
 		var ul = new Array ();
 		
 		for (var ssid in this.users) ul.push (this.users[ssid].socket);
-		
-//		for (ssid in this.users) {
-//			// Adds every user except the applicant
-//			if (sid !== ssid) ul.push (this.users[ssid].socket);
-//		}
 		
 		return ul;
 	}

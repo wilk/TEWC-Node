@@ -16,14 +16,20 @@ Ext.define ('TEWC.controller.Room', {
 	} ,
 	
 	exitRoom: function (room) {
-		var rooms = room.up ('tabpanel[itemId=tpRooms]');
+		var rooms = room.up ('tabpanel[itemId=tpRooms]') ,
+		    opts = TEWC.util.Options;
 		
 		if (rooms.items.length <= 1) this.getUsersStore().removeAll ();
 		
 		if (room.roomType == 'room') {
 			TEWC.util.WebSocket.send ('exit room', room.title);
+			
+			opts.rooms['room' + room.title] = {
+				userlist: [] ,
+				tab: null
+			};
 		}
-		else delete TEWC.util.Options.rooms['user' + room.title];
+		else delete opts.rooms['user' + room.title];
 	} ,
 	
 	resize: function (room) {

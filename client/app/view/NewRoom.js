@@ -32,6 +32,25 @@ Ext.define ('TEWC.view.NewRoom', {
 			xtype: 'textarea' ,
 			name: 'description' ,
 			emptyText: 'Room description ...'
+		} , {
+			xtype: 'container' ,
+			layout: {
+				type: 'hbox' ,
+				align: 'stretch'
+			} ,
+			items: [{
+				xtype: 'checkbox' ,
+				name: 'protected' ,
+				boxLabel: 'Protected' ,
+				padding: '0 5 0 0'
+			} , {
+				xtype: 'textfield' ,
+				name: 'password' ,
+				inputType: 'password' ,
+				hidden: true ,
+				emptyText: 'Password' ,
+				flex: 1
+			}]
 		}]
 	}] ,
 	

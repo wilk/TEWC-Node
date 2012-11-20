@@ -25,12 +25,13 @@ Ext.define ('TEWC.util.WebSocket', {
 				// Loads the rooms store
 				var rooms = Ext.data.StoreManager.lookup ('Rooms');
 				
-				Ext.each (res.roomNameList, function (room) {
+				Ext.each (res.rooms, function (room) {
 					rooms.add ({
-						room: room
+						room: room.name ,
+						protected: room.protected
 					});
 					
-					opts.rooms['room' + room] = {
+					opts.rooms['room' + room.name] = {
 						userlist: [] ,
 						tab: null
 					};
@@ -212,7 +213,8 @@ Ext.define ('TEWC.util.WebSocket', {
 			if (res.type === 'unicast') {
 				if (res.status) {
 					rooms.add ({
-						room: res.room
+						room: res.room ,
+						protected: res.protected
 					});
 					
 					opts.rooms['room' + res.room] = {
@@ -220,7 +222,10 @@ Ext.define ('TEWC.util.WebSocket', {
 						tab: null
 					};
 					
-					me.send ('enter room', res.room);
+					me.send ('enter room', {
+						name: res.room ,
+						password: res.protected ? opts.lastCreatedRoomPassword : ''
+					});
 				}
 				else {
 					Ext.Msg.show ({
@@ -237,7 +242,8 @@ Ext.define ('TEWC.util.WebSocket', {
 			}
 			else {
 				rooms.add ({
-					room: res.room
+					room: res.room ,
+					protected: res.protected
 				});
 				
 				opts.rooms['room' + res.room] = {

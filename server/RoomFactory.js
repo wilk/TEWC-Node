@@ -12,11 +12,17 @@ module.exports = RoomFactory = (function () {
 	}
 	
 	// Returns a new user, before registering it
-	this.create = function (name, description, users) {
-		var toReturn = new Room (name, description, users);
+	// room = {
+	//   name: 'name' ,
+	//   description: 'description' ,
+	//   protected: true ,
+	//   password: 'password'
+	// }
+	this.create = function (room) {
+		var toReturn = new Room (room);
 		
 		this.counter++;
-		this.rooms[name.toLowerCase ()] = toReturn;
+		this.rooms[room.name.toLowerCase ()] = toReturn;
 		
 		return toReturn;
 	}
@@ -63,21 +69,43 @@ module.exports = RoomFactory = (function () {
 		else return [];
 	}
 	
-//	this.getUserList = function (roomName, sid) {
 	this.getUserList = function (roomName) {
 		if (this.exists (roomName)) {
-//			return this.rooms[roomName.toLowerCase ()].getUserList (sid);
 			return this.rooms[roomName.toLowerCase ()].getUserList ();
 		}
 		else return [];
 	}
 	
+	// TODO: useless?
 	this.getRoomNameList = function () {
 		var res = new Array ();
 		
 		for (var room in this.rooms) res.push (this.rooms[room].name);
 		
 		return res;
+	}
+	
+	this.getRoomsList = function () {
+		var res = new Array ();
+		
+		for (var room in this.rooms) {
+			res.push ({
+				name: this.rooms[room].name ,
+				protected: this.rooms[room].protected
+			});
+		}
+		
+		return res;
+	}
+	
+	this.protected = function (roomName) {
+		if (this.exists (roomName)) return this.rooms[roomName.toLowerCase ()].protected;
+		else return false;
+	}
+	
+	this.validate = function (name, password) {
+		if (this.exists (name)) return this.rooms[name.toLowerCase ()].password == password;
+		else return false;
 	}
 	
 	return this;

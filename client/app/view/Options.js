@@ -53,7 +53,7 @@ Ext.define ('TEWC.view.Options', {
 				} , {
 					xtype: 'radiogroup' ,
 					itemId: 'rgDate' ,
-					disabled: true ,
+					hidden: true ,
 					columns: 2 ,
 					items: [
 						{boxLabel: '27 Aug', name: 'rgDate', inputValue: 'd M'} ,

@@ -16,8 +16,15 @@ Ext.define ('TEWC.controller.NewRoom', {
 			} ,
 			'newroom textfield[name=name]': {
 				specialkey: this.parseText
+			} ,
+			'newroom checkbox[name=protected]': {
+				change: this.setProtected
 			}
 		});
+	} ,
+	
+	setProtected: function (cb, checked) {
+		cb.next('textfield[name=password]').setVisible (checked);
 	} ,
 	
 	focus: function (win) {
@@ -39,12 +46,18 @@ Ext.define ('TEWC.controller.NewRoom', {
 			var params = form.getFieldValues () ,
 			    ws = TEWC.util.WebSocket;
 			
-			ws.send ('create room', {
-				name: params.name ,
-				description: params.description
-			});
+			params.password = params.password.trim ();
 			
-			this.cancel (btn);
+			if ((params.protected) && (Ext.isEmpty (params.password))) {
+				panelForm.down('textfield[name=password]').markInvalid ('Fill this field first!');
+			}
+			else {
+				ws.send ('create room', params);
+				
+				if (params.protected) TEWC.util.Options.lastCreatedRoomPassword = params.password;
+				
+				this.cancel (btn);
+			}
 		}
 		else form.markInvalid ();
 	} ,

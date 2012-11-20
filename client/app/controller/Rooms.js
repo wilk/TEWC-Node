@@ -17,15 +17,24 @@ Ext.define ('TEWC.controller.Rooms', {
 	} ,
 	
 	enterRoom: function (grid, record, item, index) {
-		var rooms = Ext.getCmp('chat').down ('tabpanel[itemId=tpRooms]') ,
-		    room = Ext.isEmpty (TEWC.util.Options.rooms['room' + record.get ('room')]) ? null : TEWC.util.Options.rooms['room' + record.get ('room')].tab;
-		
+		var opts = TEWC.util.Options ,
+		    rooms = Ext.getCmp('chat').down ('tabpanel[itemId=tpRooms]') ,
+		    room = Ext.isEmpty (opts.rooms['room' + record.get ('room')]) ? null : 
+		    	   Ext.isEmpty (opts.rooms['room' + record.get ('room')].tab) ? null : opts.rooms['room' + record.get ('room')].tab;
+		    
 		if (Ext.isEmpty (room)) {
-			TEWC.util.WebSocket.send ('enter room', record.get ('room'));
+			if (record.get ('protected')) {
+				Ext.create('TEWC.view.PromptPassword', {
+					roomName: record.get ('room')
+				}).show ();
+			}
+			else {
+				TEWC.util.WebSocket.send ('enter room', {
+					name: record.get ('room')
+				});
+			}
 		}
-		else {
-			rooms.setActiveTab (room);
-		}
+		else rooms.setActiveTab (room);
 	} ,
 	
 	highlight: function (records, index, item) {

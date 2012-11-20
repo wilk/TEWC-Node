@@ -26,7 +26,8 @@ Ext.application ({
 		'Rooms' ,
 		'Room' ,
 		'Options' ,
-		'Help'
+		'Help' ,
+		'PromptPassword'
 	] ,
 	models: [
 		'Rooms' ,
@@ -46,7 +47,8 @@ Ext.application ({
 		'Room' ,
 		'Users' ,
 		'Options' ,
-		'Viewport'
+		'Viewport' ,
+		'PromptPassword'
 	] ,
 	
 	launch: function () {

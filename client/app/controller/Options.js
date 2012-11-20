@@ -60,7 +60,7 @@ Ext.define ('TEWC.controller.Options', {
 	checkTime: function (cb, checked) {
 		var rgTime = cb.next ('radiogroup[itemId=rgTime]');
 		
-		rgTime.setDisabled (!checked);
+		rgTime.setVisible (checked);
 		
 		this.snapshot ();
 		
@@ -70,7 +70,7 @@ Ext.define ('TEWC.controller.Options', {
 	checkDate: function (cbDate, checked) {
 		var rgDate = cbDate.next ('radiogroup[itemId=rgDate]');
 		
-		rgDate.setDisabled (!checked);
+		rgDate.setVisible (checked);
 		
 		this.snapshot ();
 		

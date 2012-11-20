@@ -67,3 +67,7 @@
 	font-size: 14px;
 	padding: 0 0 0 5px;
 }
+
+.room_protected {
+    background: url(images/lock.png) no-repeat right !important;
+}

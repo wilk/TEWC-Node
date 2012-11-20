@@ -19,5 +19,7 @@ Ext.define ('TEWC.util.Options', {
 			'<span class="message_user" style="color:#{color};">{user}:</span> ' ,
 			'<span class="message_body">{msg}</span>' ,
 		'<div>'
-	])
+	]) ,
+	
+	lastCreatedRoomPassword: ''
 });

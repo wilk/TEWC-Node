@@ -15,6 +15,13 @@ Ext.define ('TEWC.view.Rooms', {
 	columns: [{
 		header: 'Room' ,
 		dataIndex: 'room' ,
+		renderer: function (value, meta, record) {
+			if (record.get ('protected')) {
+				meta.tdCls = 'room_protected';
+			}
+			
+			return value;
+		} ,
 		flex: 1
 	}] ,
 	
