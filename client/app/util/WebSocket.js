@@ -139,10 +139,15 @@ Ext.define ('TEWC.util.WebSocket', {
 			    room = Ext.isEmpty (opts.rooms['room' + res.room]) ? null : opts.rooms['room' + res.room].tab ,
 			    divRoom = room.getEl().down ('div[class="room"]') ,
 			    body = room.getEl().down ('div[class="room_body"]') ,
-			    ts = Ext.isEmpty (opts.msgDateFormat) ? '' : '[<span class="timestamp">' + Ext.Date.format (new Date (res.timestamp), opts.msgDateFormat) + '</span>] ' ,
-			    user = '<b>' + ts + res.from + '</b>';
+    			    ts = Ext.isEmpty (opts.msgDateFormat) ? '' : '[' + Ext.Date.format (new Date (res.timestamp), opts.msgDateFormat) + ']';
 			
-			body.insertHtml ('beforeEnd', '<p>' + user + ': ' + res.message + '</p>');
+			opts.msgTemplate.append (body, {
+				timestamp: ts ,
+				user: res.from ,
+				color: res.color ,
+				msg: res.message
+			});
+
 			divRoom.scroll ('b', divRoom.getHeight (true));
 		});
 		
@@ -189,10 +194,15 @@ Ext.define ('TEWC.util.WebSocket', {
 			
 			var body = room.getEl().down ('div[class="room_body"]') ,
 			    divRoom = room.getEl().down ('div[class="room"]') ,
-			    ts = Ext.isEmpty (opts.msgDateFormat) ? '' : '[<span class="timestamp">' + Ext.Date.format (new Date (res.timestamp), opts.msgDateFormat) + '</span>] ' ,
-			    user = '<b>' + ts + res.from + '</b>';
+			    ts = Ext.isEmpty (opts.msgDateFormat) ? '' : '[' + Ext.Date.format (new Date (res.timestamp), opts.msgDateFormat) + ']';
 			
-			body.insertHtml ('beforeEnd', '<p>' + user + ': ' + res.message + '</p>');
+			opts.msgTemplate.append (body, {
+				timestamp: ts ,
+				user: res.from ,
+				color: res.color ,
+				msg: res.message
+			});
+
 			divRoom.scroll ('b', divRoom.getHeight (true));
 		});
 		

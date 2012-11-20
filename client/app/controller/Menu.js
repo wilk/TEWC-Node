@@ -44,7 +44,10 @@ Ext.define ('TEWC.controller.Menu', {
 				optsStore.sync ();
 				
 				ws.connect ();
-				ws.send ('login', opts.username);
+				ws.send ('login', {
+					name: opts.username ,
+					color: opts.color
+				});
 			}
 			else tf.markInvalid ();
 		}

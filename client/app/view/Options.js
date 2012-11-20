@@ -13,6 +13,10 @@ Ext.define ('TEWC.view.Options', {
 	} ,
 	
 	items: [{
+		xtype: 'container' ,
+		html: '<i><b>Preview: </b></i><span id="previewMessage"></span>' ,
+		padding: '5px'
+	} , {
 		xtype: 'tabpanel' ,
 		itemId: 'tpOptions' ,
 		layout: {
@@ -34,10 +38,6 @@ Ext.define ('TEWC.view.Options', {
 			defaultType: 'container' ,
 			
 			items: [{
-				html: '<i>Preview: </i><b class="previewDate">[' + Ext.Date.format (new Date (), TEWC.util.Options.msgDateFormat) + '] Wilk: Hello!</b>' ,
-				itemId: 'lblPreview' ,
-				padding: '0 0 3 0'
-			} , {
 				layout: {
 					type: 'vbox' ,
 					align: 'stretch'
@@ -83,6 +83,19 @@ Ext.define ('TEWC.view.Options', {
 						{boxLabel: '15:31:49', name: 'rgTime', inputValue: 'H:i:s', checked: true}
 					]
 				}]
+			}]
+		} , {
+			title: 'Color' ,
+			itemId: 'tabColor' ,
+			layout: {
+				type: 'vbox' ,
+				align: 'stretch'
+			} ,
+			items: [{
+				xtype: 'colorpicker' ,
+				itemId: 'cpColor' ,
+				colors: ["000000", "993300", "333300", "003300", "003366", "000080", "333399", "333333", "800000", "FF6600", "808000", "008000", "008080", "0000FF", "666699", "808080", "FF0000", "FF9900", "99CC00", "339966", "33CCCC", "3366FF", "800080", "969696", "FF00FF", "FFCC00", "FFFF00", "00FF00", "00FFFF", "00CCFF", "993366", "C0C0C0", "FF99CC", "FFCC99", "FFFF99", "CCFFCC", "CCFFFF", "99CCFF", "CC99FF"] ,
+				value: TEWC.util.Options.color
 			}]
 		}]
 	}]

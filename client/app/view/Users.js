@@ -6,10 +6,11 @@ Ext.define ('TEWC.view.Users', {
 	
 	title: 'Users List' ,
 	collapsible: true ,
-	resizable: false ,
+	resizable: true ,
 	store: 'Users' ,
 	margin: '5 5 5 0' ,
 	width: 102 ,
+	scroll: true ,
 	
 	columns: [{
 		header: 'User' ,

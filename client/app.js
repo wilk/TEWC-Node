@@ -58,21 +58,8 @@ Ext.application ({
 				opts.baseURI = config.baseURI;
 				opts.port = config.port;
 				
-//				var storeOpts = Ext.data.StoreManager.lookup ('Options');
-//				
-//				storeOpts.load (function (records) {
-//					var record = records[0];
-//					
-//					if (!Ext.isEmpty (record)) {
-//						opts.username = record.get ('username');
-//						opts.msgDateFormatPattern = record.get ('msgDateFormatPattern');
-//						opts.msgDateFormatType = record.get ('msgDateFormatType');
-//					}
-					
-					Ext.Loader.loadScript (config.baseURI + ':' + config.port + '/socket.io/socket.io.js');
-				
-					Ext.create ('TEWC.view.Viewport');
-//				});
+				Ext.Loader.loadScript (config.baseURI + ':' + config.port + '/socket.io/socket.io.js');
+				Ext.create ('TEWC.view.Viewport');
 			}
 		});
 	}

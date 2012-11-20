@@ -6,10 +6,11 @@ Ext.define ('TEWC.view.Rooms', {
 	
 	title: 'Rooms List' ,
 	collapsible: true ,
-	resizable: false ,
+	resizable: true ,
 	store: 'Rooms' ,
 	margin: '5 0 5 5' ,
 	width: 102 ,
+	scroll: true ,
 	
 	columns: [{
 		header: 'Room' ,

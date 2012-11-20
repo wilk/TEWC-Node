@@ -4,19 +4,15 @@ var RoomFactory = require ('./RoomFactory') ,
     config = JSON.parse (cf) ,
     io = require('socket.io').listen (config.port);
 
-//var RoomFactory = require ('./RoomFactory');
-
-//RoomFactory.create ('Plaza', 'Central square discussion');
-
 // Handles single socket connection
 io.sockets.on ('connection', function (socket) {
-	socket.on ('login', function (name) {
+	socket.on ('login', function (user) {
 		var ul = io.sockets.clients ();
 		var found = false;
 		
 		// Checks if the name already exists
 		for (var i in ul) {
-			if (ul[i].store.data.name === name) {
+			if (ul[i].store.data.name === user.name) {
 				found = true;
 				break;
 			}
@@ -32,7 +28,8 @@ io.sockets.on ('connection', function (socket) {
 		}
 		// Otherwise, sets socket vars
 		else {
-			socket.set ('name', name);
+			socket.set ('name', user.name);
+			socket.set ('color', user.color);
 			socket.set ('rooms', new Array ());
 			
 			socket.emit ('login',
@@ -52,6 +49,7 @@ io.sockets.on ('connection', function (socket) {
 			ul[i].emit ('public message', 
 			{
 				'from': socket.store.data.name ,
+				'color': socket.store.data.color ,
 				'room': room.name ,
 				'message': room.message ,
 				'timestamp': new Date ()
@@ -68,6 +66,7 @@ io.sockets.on ('connection', function (socket) {
 				ul[i].emit ('private message', {
 					'type': 'anycast' ,
 					'from': socket.store.data.name ,
+					'color': socket.store.data.color ,
 					'to': user.to ,
 					'message': user.message ,
 					'timestamp': new Date ()
@@ -81,6 +80,7 @@ io.sockets.on ('connection', function (socket) {
 		socket.emit ('private message', {
 			'type': 'unicast' ,
 			'from': socket.store.data.name ,
+			'color': socket.store.data.color ,
 			'to': user.to ,
 			'message': user.message ,
 			'timestamp': new Date ()
@@ -179,6 +179,10 @@ io.sockets.on ('connection', function (socket) {
 		// Removes the user from each room that belongs to
 		for (var i in rl) exitRoom (rl[i], socket);
 	});
+	
+	socket.on ('change color', function (color) {
+		socket.store.data.color = color;
+	});
 });
 
 function exitRoom (roomName, socket) {
@@ -187,16 +191,8 @@ function exitRoom (roomName, socket) {
 		var ul = RoomFactory.getUserList (roomName);
 		
 		if (ul.length === 0) {
-			// TODO: use a broadcast message, not two different messages
-			socket.broadcast.emit ('destroy room', 
+			io.sockets.emit ('destroy room', 
 			{
-				'type': 'anycast' ,
-				'room': roomName
-			});
-			
-			socket.emit ('destroy room', 
-			{
-				'type': 'unicast' ,
 				'room': roomName
 			});
 		}

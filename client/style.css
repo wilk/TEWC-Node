@@ -25,9 +25,14 @@
 	color: #2e9f63;
 }
 
-.timestamp {
+.message_timestamp {
 	font-style: italic;
-	font-size: 10px;
+	font-size: 11px;
+	color: #969696;
+}
+
+.message_user {
+	font-weight: bold;
 }
 
 .room_enter_user {

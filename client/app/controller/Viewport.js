@@ -22,6 +22,7 @@ Ext.define ('TEWC.controller.Viewport', {
 		
 			if (!Ext.isEmpty (record)) {
 				opts.username = record.get ('username');
+				opts.color = record.get ('color');
 				opts.msgDateFormatPattern = record.get ('msgDateFormatPattern');
 				opts.msgDateFormatType = record.get ('msgDateFormatType');
 			}

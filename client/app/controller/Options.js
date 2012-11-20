@@ -8,6 +8,7 @@ Ext.define ('TEWC.controller.Options', {
 	init: function () {
 		this.control ({
 			'options': {
+				afterrender: this.updatePreview ,
 				show: this.initOpts ,
 				close: this.saveOpts
 			} ,
@@ -23,19 +24,27 @@ Ext.define ('TEWC.controller.Options', {
 			'options radiogroup[itemId=rgTime]': {
 				change: this.changeTime
 			} ,
+			'options colorpicker[itemId=cpColor]': {
+				select: this.setColor
+			}
 		});
 	} ,
 	
+	setColor: function (cp, color) {
+		TEWC.util.Options.color = color;
+		
+		this.updatePreview ();
+	} ,
+	
 	updatePreview: function () {
-		var win = Ext.getCmp ('options') ,
-		    lblPreview = win.down ('container[itemId=lblPreview]') ,
-		    previewDate = lblPreview.getEl().down ('b[class="previewDate"]') ,
-		    body = ' Wilk: Hello!' ,
-		    opts = TEWC.util.Options;
+		var opts = TEWC.util.Options;
 		
-		if (!Ext.isEmpty (opts.msgDateFormat)) body = '[' + Ext.Date.format (new Date (), opts.msgDateFormat) + ']' + body;
-		
-		previewDate.setHTML (body);
+		opts.msgTemplate.overwrite ('previewMessage', {
+			timestamp: Ext.isEmpty (opts.msgDateFormat) ? '' : '[' + Ext.Date.format (new Date (), opts.msgDateFormat) + ']' ,
+			user: opts.username ,
+			color: opts.color ,
+			msg: 'Hello world!'
+		});
 	} ,
 	
 	changeTime: function (rb, val) {
@@ -137,13 +146,16 @@ Ext.define ('TEWC.controller.Options', {
 			   cbTime.getValue () ? 'time' : '' ,
 		    data = {
 		    	msgDateFormatPattern: TEWC.util.Options.msgDateFormat ,
-		    	msgDateFormatType: type
+		    	msgDateFormatType: type ,
+		    	color: TEWC.util.Options.color
 		    };
 		
 		if (Ext.isEmpty (modelOpts)) storeOpts.add (data);
 		else modelOpts.set (data);
 		
 		storeOpts.sync ();
+		
+		TEWC.util.WebSocket.send ('change color', TEWC.util.Options.color);
 		
 		Ext.getCmp('chat').down('textfield[itemId=tfSend]').focus ();
 	}
