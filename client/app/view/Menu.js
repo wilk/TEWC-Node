@@ -40,8 +40,10 @@ Ext.define ('TEWC.view.Menu', {
 			xtype: 'textfield' ,
 			itemId: 'tfLogin' ,
 			emptyText: 'Username' ,
+			value: TEWC.util.Options.username ,
 			enableKeyEvents: true ,
-			allowBlank: false
+			allowBlank: false ,
+			maxLength: 20
 		} , {
 			xtype: 'label' ,
 			itemId: 'lblUsername'

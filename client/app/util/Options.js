@@ -8,5 +8,5 @@ Ext.define ('TEWC.util.Options', {
 	// rooms['Plaza'].tab -> tab of tabpanel
 	rooms: {} ,
 	
-	msgDateFormat: Ext.util.Cookies.get ('msgDateFormatPattern') == null ? 'H:i:s' : Ext.util.Cookies.get ('msgDateFormatPattern')
+	msgDateFormat: 'H:i:s'
 });

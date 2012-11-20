@@ -29,7 +29,11 @@ Ext.define ('TEWC.controller.NewRoom', {
 	} ,
 	
 	createRoom: function (btn) {
-		var form = btn.up('newroom').down('form[itemId=fmRoom]').getForm ();
+		var panelForm = btn.up('newroom').down ('form[itemId=fmRoom]') ,
+		    form = panelForm.getForm () ,
+		    tfRoomName = panelForm.down ('textfield[name=name]');
+		
+		tfRoomName.setValue (tfRoomName.getValue().trim ());
 		
 		if (form.isValid ()) {
 			var params = form.getFieldValues () ,
@@ -42,9 +46,7 @@ Ext.define ('TEWC.controller.NewRoom', {
 			
 			this.cancel (btn);
 		}
-		else {
-			form.markInvalid ('This field has to be filled!');
-		}
+		else form.markInvalid ();
 	} ,
 	
 	cancel: function (btn) {

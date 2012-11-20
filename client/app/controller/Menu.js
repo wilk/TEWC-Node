@@ -2,8 +2,8 @@ Ext.define ('TEWC.controller.Menu', {
 	extend: 'Ext.app.Controller' ,
 	
 	views: ['Menu'] ,
-	models: ['Users', 'Rooms'] ,
-	stores: ['Users', 'Rooms'] ,
+	models: ['Users', 'Rooms', 'Options'] ,
+	stores: ['Users', 'Rooms', 'Options'] ,
 	
 	init: function () {
 		this.control ({
@@ -28,15 +28,25 @@ Ext.define ('TEWC.controller.Menu', {
 	
 	login: function (tf, evt) {
 		if (evt.getKey () == evt.ENTER) {
+			tf.setValue (tf.getValue().trim ());
+			
 			if (tf.isValid ()) {
-				var opts = TEWC.util.Options, ws = TEWC.util.WebSocket;
+				var opts = TEWC.util.Options ,
+				    ws = TEWC.util.WebSocket ,
+				    optsStore = this.getOptionsStore () ,
+				    optsModel = optsStore.first ();
 				
 				opts.username = tf.getValue ();
+				
+				if (Ext.isEmpty (optsModel)) optsStore.add ({username: opts.username});
+				else optsModel.set ({username: opts.username});
+				
+				optsStore.sync ();
 				
 				ws.connect ();
 				ws.send ('login', opts.username);
 			}
-			else tf.markInvalid ('This field can\'t be empty!');
+			else tf.markInvalid ();
 		}
 	} ,
 	
@@ -60,6 +70,8 @@ Ext.define ('TEWC.controller.Menu', {
 		this.getRoomsStore().removeAll ();
 		
 		Ext.getCmp('chat').down('tabpanel[itemId=tpRooms]').removeAll ();
+		
+		menu.down('textfield[itemId=tfLogin]').focus ();
 	} ,
 	
 	newRoom: function (btn) {

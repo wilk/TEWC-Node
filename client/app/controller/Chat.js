@@ -13,7 +13,7 @@ Ext.define ('TEWC.controller.Chat', {
 	
 	send: function (tf, evt) {
 		if (evt.getKey () == evt.ENTER) {
-			var msg = tf.getValue () ,
+			var msg = tf.getValue().trim () ,
 			    rooms = tf.up('chat').down ('tabpanel[itemId=tpRooms]');
 		
 			if (!Ext.isEmpty (msg) && (rooms.items.length > 0)) {

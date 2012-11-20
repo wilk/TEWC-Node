@@ -2,6 +2,8 @@ Ext.define ('TEWC.controller.Options', {
 	extend: 'Ext.app.Controller' ,
 	
 	views: ['Options'] ,
+	models: ['Options'] ,
+	stores: ['Options'] ,
 	
 	init: function () {
 		this.control ({
@@ -90,8 +92,10 @@ Ext.define ('TEWC.controller.Options', {
 	} ,
 	
 	initOpts: function (win) {
-		var ckFormatPattern = Ext.util.Cookies.get ('msgDateFormatPattern') ,
-		    ckFormatType = Ext.util.Cookies.get ('msgDateFormatType');
+		var storeOpts = this.getOptionsStore () ,
+		    modelOpts = storeOpts.first () ,
+		    ckFormatPattern = Ext.isEmpty (modelOpts) ? null : modelOpts.get ('msgDateFormatPattern') ,
+		    ckFormatType = Ext.isEmpty (modelOpts) ? null : modelOpts.get ('msgDateFormatType');
 		
 		if (ckFormatPattern != null) {
 			var cbDate = win.down ('checkbox[itemId=cbDate]') ,
@@ -124,14 +128,22 @@ Ext.define ('TEWC.controller.Options', {
 	} ,
 	
 	saveOpts: function (win) {
-		var cbDate = win.down ('checkbox[itemId=cbDate]') ,
+		var storeOpts = this.getOptionsStore () ,
+		    modelOpts = storeOpts.first () ,
+		    cbDate = win.down ('checkbox[itemId=cbDate]') ,
 		    cbTime = win.down ('checkbox[itemId=cbTime]') ,
 		    type = cbDate.getValue () && cbTime.getValue () ? 'datetime' :
 			   cbDate.getValue () ? 'date' :
-			   cbTime.getValue () ? 'time' : '';
+			   cbTime.getValue () ? 'time' : '' ,
+		    data = {
+		    	msgDateFormatPattern: TEWC.util.Options.msgDateFormat ,
+		    	msgDateFormatType: type
+		    };
 		
-		Ext.util.Cookies.set ('msgDateFormatType', type);
-		Ext.util.Cookies.set ('msgDateFormatPattern', TEWC.util.Options.msgDateFormat);
+		if (Ext.isEmpty (modelOpts)) storeOpts.add (data);
+		else modelOpts.set (data);
+		
+		storeOpts.sync ();
 		
 		Ext.getCmp('chat').down('textfield[itemId=tfSend]').focus ();
 	}

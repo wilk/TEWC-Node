@@ -19,7 +19,6 @@ Ext.define ('TEWC.view.Chat', {
 		itemId: 'tfSend' ,
 		anchor: '100%' ,
 		enableKeyEvents: true ,
-		allowBlank: false ,
 		margin: '5 5 0 5' ,
 		disabled: true
 	}]

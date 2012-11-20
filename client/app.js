@@ -29,11 +29,13 @@ Ext.application ({
 	] ,
 	models: [
 		'Rooms' ,
-		'Users'
+		'Users' ,
+		'Options'
 	] ,
 	stores: [
 		'Rooms' ,
-		'Users'
+		'Users' ,
+		'Options'
 	] ,
 	controllers: [
 		'Menu' ,
@@ -42,20 +44,35 @@ Ext.application ({
 		'Rooms' ,
 		'Room' ,
 		'Users' ,
-		'Options'
+		'Options' ,
+		'Viewport'
 	] ,
 	
 	launch: function () {
 		Ext.Ajax.request ({
 			url: '../config.json' ,
 			success: function (res) {
-				var config = Ext.JSON.decode (res.responseText);
-				TEWC.util.Options.baseURI = config.baseURI;
-				TEWC.util.Options.port = config.port;
+				var config = Ext.JSON.decode (res.responseText) ,
+				    opts = TEWC.util.Options;
 				
-				Ext.Loader.loadScript (config.baseURI + ':' + config.port + '/socket.io/socket.io.js');
+				opts.baseURI = config.baseURI;
+				opts.port = config.port;
 				
-				Ext.create ('TEWC.view.Viewport');
+//				var storeOpts = Ext.data.StoreManager.lookup ('Options');
+//				
+//				storeOpts.load (function (records) {
+//					var record = records[0];
+//					
+//					if (!Ext.isEmpty (record)) {
+//						opts.username = record.get ('username');
+//						opts.msgDateFormatPattern = record.get ('msgDateFormatPattern');
+//						opts.msgDateFormatType = record.get ('msgDateFormatType');
+//					}
+					
+					Ext.Loader.loadScript (config.baseURI + ':' + config.port + '/socket.io/socket.io.js');
+				
+					Ext.create ('TEWC.view.Viewport');
+//				});
 			}
 		});
 	}

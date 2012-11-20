@@ -25,6 +25,7 @@ Ext.define ('TEWC.view.NewRoom', {
 			name: 'name' ,
 			emptyText: 'Room name' ,
 			allowBlank: false ,
+			maxLength: 20 ,
 			enableKeyEvents: true
 		} , {
 			xtype: 'textarea' ,

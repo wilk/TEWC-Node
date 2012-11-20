@@ -1,5 +1,6 @@
 Ext.define ('TEWC.view.Viewport', {
 	extend: 'Ext.container.Viewport' ,
+	alias: 'widget.tewcviewport' ,
 	
 	id: 'viewportPage' ,
 	requires: [
