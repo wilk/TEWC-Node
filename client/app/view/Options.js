@@ -6,6 +6,7 @@ Ext.define ('TEWC.view.Options', {
 	title: 'Options' ,
 	modal: true ,
 	width: 300 ,
+	icon: 'images/gear.png' ,
 	
 	layout: {
 		type: 'vbox' ,

@@ -48,3 +48,21 @@
 	padding: 1px 0 1px 0;
 	color: #ff0b0b;
 }
+
+.help {
+	padding: 5px;
+}
+
+.help_section {
+	padding: 0 0 2px 0;
+}
+
+.help_title {
+	font-size: 20px;
+	padding-bottom: 2px;
+	text-decoration: underline;
+}
+
+.help_body {
+	font-size: 14px;
+}

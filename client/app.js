@@ -25,7 +25,8 @@ Ext.application ({
 		'NewRoom' ,
 		'Rooms' ,
 		'Room' ,
-		'Options'
+		'Options' ,
+		'Help'
 	] ,
 	models: [
 		'Rooms' ,

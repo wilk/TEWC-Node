@@ -5,6 +5,7 @@ Ext.define ('TEWC.view.NewRoom', {
 	title: 'New Room' ,
 	width: 300 ,
 	modal: true ,
+	icon: 'images/balloon--plus.png' ,
 	
 	layout: {
 		type: 'vbox' ,
