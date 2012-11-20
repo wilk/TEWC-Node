@@ -42,7 +42,6 @@ io.sockets.on ('connection', function (socket) {
 	
 	// room.name and room.message
 	socket.on ('public message', function (room) {
-//		var ul = RoomFactory.getUserList (room.name, socket.store.id);
 		var ul = RoomFactory.getUserList (room.name);
 		
 		for (var i = 0; i < ul.length; i++) {
@@ -163,9 +162,6 @@ io.sockets.on ('connection', function (socket) {
 			{
 				'type': 'anycast' ,
 				'room': room.name
-				// room.name and room.description
-//				'room': room ,
-//				'username': socket.store.data.name
 			});
 		}
 	});
@@ -187,7 +183,6 @@ io.sockets.on ('connection', function (socket) {
 
 function exitRoom (roomName, socket) {
 	if (RoomFactory.removeUser (socket.store.id, roomName)) {
-//		var ul = RoomFactory.getUserList (roomName, socket.store.id);
 		var ul = RoomFactory.getUserList (roomName);
 		
 		if (ul.length === 0) {

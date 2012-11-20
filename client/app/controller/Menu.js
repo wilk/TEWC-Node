@@ -61,7 +61,7 @@ Ext.define ('TEWC.controller.Menu', {
 	} ,
 	
 	logout: function (btn) {
-		var menu = btn.up ('menunav');
+		var menu = Ext.getCmp ('menuNav');
 		
 		TEWC.util.WebSocket.close ();
 		

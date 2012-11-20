@@ -50,11 +50,14 @@ Ext.application ({
 	] ,
 	
 	launch: function () {
+		var opts = TEWC.util.Options;
+		
+		opts.globalApp = this;
+		
 		Ext.Ajax.request ({
 			url: '../config.json' ,
 			success: function (res) {
-				var config = Ext.JSON.decode (res.responseText) ,
-				    opts = TEWC.util.Options;
+				var config = Ext.JSON.decode (res.responseText);
 				
 				opts.baseURI = config.baseURI;
 				opts.port = config.port;

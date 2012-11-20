@@ -1,6 +1,8 @@
 Ext.define ('TEWC.util.Options', {
 	singleton: true ,
 	
+	globalApp: '' ,
+	
 	username: '' ,
 	color: '000000' ,
 	
