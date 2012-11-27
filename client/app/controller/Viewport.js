@@ -19,7 +19,7 @@ Ext.define ('TEWC.controller.Viewport', {
 	
 		storeOpts.load (function (records) {
 			var record = records[0];
-		
+			
 			if (!Ext.isEmpty (record)) {
 				opts.username = record.get ('username');
 				opts.color = record.get ('color');

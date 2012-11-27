@@ -55,6 +55,8 @@ Ext.define ('TEWC.controller.Menu', {
 					name: opts.username ,
 					color: opts.color
 				});
+				
+				opts.normalDisconnection = false;
 			}
 			else tf.markInvalid ();
 		}
@@ -62,6 +64,8 @@ Ext.define ('TEWC.controller.Menu', {
 	
 	logout: function (btn) {
 		var menu = Ext.getCmp ('menuNav');
+		
+		TEWC.util.Options.normalDisconnection = true;
 		
 		TEWC.util.WebSocket.close ();
 		

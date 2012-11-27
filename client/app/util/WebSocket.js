@@ -295,14 +295,16 @@ Ext.define ('TEWC.util.WebSocket', {
 		});
 		
 		me.ws.on ('disconnect', function (res) {
-			opts.globalApp.getController('Menu').logout ();
-			
-			Ext.Msg.show ({
-				title: 'Connection closed!' ,
-				msg: 'Damn! Connection closed by the server.' ,
-				icon: Ext.Msg.ERROR ,
-				buttons: Ext.Msg.OK
-			});
+			if (!opts.normalDisconnection) {
+				opts.globalApp.getController('Menu').logout ();
+				
+				Ext.Msg.show ({
+					title: 'Connection closed!' ,
+					msg: 'Damn! Connection closed by the server.' ,
+					icon: Ext.Msg.ERROR ,
+					buttons: Ext.Msg.OK
+				});
+			}
 		});
 	} ,
 	

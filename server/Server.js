@@ -167,7 +167,6 @@ io.sockets.on ('connection', function (socket) {
 		}
 		// Otherwise creates a new room
 		else {
-//			RoomFactory.create (room.name, room.description);
 			RoomFactory.create (room);
 			
 			// ACK to the user

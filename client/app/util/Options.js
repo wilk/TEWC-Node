@@ -21,5 +21,9 @@ Ext.define ('TEWC.util.Options', {
 		'<div>'
 	]) ,
 	
-	lastCreatedRoomPassword: ''
+	// cache for password of the just created room
+	lastCreatedRoomPassword: '' ,
+	
+	// to avoid misurunderstanding with server disconnection
+	normalDisconnection: false
 });
