@@ -17,8 +17,8 @@ Ext.define ('TEWC.util.WebSocket', {
 	} ,
 	
 	handle: function () {
-		var opts = TEWC.util.Options;
-		var me = this;
+		var opts = TEWC.util.Options ,
+		    me = this;
 		
 		me.ws.on ('login', function (res) {
 			if (res.status) {
@@ -48,6 +48,8 @@ Ext.define ('TEWC.util.WebSocket', {
 				menu.down('button[itemId=btnOptions]').setVisible (true);
 				
 				var tfSend = Ext.getCmp('chat').down ('textfield[itemId=tfSend]');
+				
+				Ext.getCmp('viewportPage').setLoading (false);
 				
 				tfSend.enable ();
 				tfSend.focus ();
@@ -112,6 +114,8 @@ Ext.define ('TEWC.util.WebSocket', {
 						buttons: Ext.Msg.OK
 					});
 				}
+				
+				Ext.getCmp('viewportPage').setLoading (false);
 			}
 			else {
 				opts.rooms['room' + res.room].userlist.push (res.user);
@@ -238,6 +242,8 @@ Ext.define ('TEWC.util.WebSocket', {
 						icon: Ext.Msg.ERROR ,
 						buttons: Ext.Msg.OK
 					});
+					
+					Ext.getCmp('viewportPage').setLoading (false);
 				}
 			}
 			else {
@@ -305,6 +311,8 @@ Ext.define ('TEWC.util.WebSocket', {
 					buttons: Ext.Msg.OK
 				});
 			}
+			
+			Ext.getCmp('viewportPage').setLoading (false);
 		});
 	} ,
 	

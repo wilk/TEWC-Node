@@ -190,12 +190,21 @@ io.sockets.on ('connection', function (socket) {
 	
 	socket.on ('exit room', function (roomName) {
 		exitRoom (roomName, socket);
+		
+		var index = 0 ,
+		    rooms = socket.store.data.rooms;
+		
+		while ((index < rooms.length) && (rooms[index] != roomName)) index++;
+		
+		rooms.splice (index, 1);
 	});
 	
 	socket.on ('disconnect', function () {
 		var rl = socket.store.data.rooms;
 		// Removes the user from each room that belongs to
 		for (var i in rl) exitRoom (rl[i], socket);
+		
+		socket.store.data.rooms = [];
 	});
 	
 	socket.on ('change color', function (color) {

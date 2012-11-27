@@ -32,6 +32,8 @@ Ext.define ('TEWC.controller.Rooms', {
 				TEWC.util.WebSocket.send ('enter room', {
 					name: record.get ('room')
 				});
+				
+				Ext.getCmp('viewportPage').setLoading (true);
 			}
 		}
 		else rooms.setActiveTab (room);

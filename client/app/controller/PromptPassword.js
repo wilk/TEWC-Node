@@ -29,6 +29,8 @@ Ext.define ('TEWC.controller.PromptPassword', {
 				});
 				
 				win.close ();
+				
+				Ext.getCmp('viewportPage').setLoading (true);
 			}
 		}
 	}

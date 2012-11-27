@@ -38,6 +38,8 @@ Ext.define ('TEWC.controller.Menu', {
 			tf.setValue (tf.getValue().trim ());
 			
 			if (tf.isValid ()) {
+				Ext.getCmp('viewportPage').setLoading ('Wait a moment during login...');
+				
 				var opts = TEWC.util.Options ,
 				    ws = TEWC.util.WebSocket ,
 				    optsStore = this.getOptionsStore () ,

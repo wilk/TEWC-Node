@@ -52,6 +52,8 @@ Ext.define ('TEWC.controller.NewRoom', {
 				panelForm.down('textfield[name=password]').markInvalid ('Fill this field first!');
 			}
 			else {
+				Ext.getCmp('viewportPage').setLoading (true);
+				
 				ws.send ('create room', params);
 				
 				if (params.protected) TEWC.util.Options.lastCreatedRoomPassword = params.password;
