@@ -1,7 +1,9 @@
+process.chdir (__dirname);
+process.chdir ('../');
+
 var RoomFactory = require ('./RoomFactory') ,
     fs = require ('fs') ,
-    cf = fs.readFileSync ('../config.json', 'utf-8') ,
-    config = JSON.parse (cf) ,
+    config = JSON.parse (fs.readFileSync ('config.json', 'utf-8')) ,
     io = require('socket.io').listen (config.port);
 
 // Handles single socket connection

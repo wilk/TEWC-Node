@@ -24,7 +24,10 @@ Ext.define ('TEWC.controller.NewRoom', {
 	} ,
 	
 	setProtected: function (cb, checked) {
-		cb.next('textfield[name=password]').setVisible (checked);
+		var tfPassword = cb.next ('textfield[name=password]');
+		
+		tfPassword.setVisible (checked);
+		if (checked) tfPassword.focus ();
 	} ,
 	
 	focus: function (win) {
